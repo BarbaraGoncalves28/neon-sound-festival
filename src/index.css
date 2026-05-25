@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(9, 9, 11, 0.9) inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+body{
+  background-color: #0B0F1A;
+}
+
+:root {
+  --neon-pink: #FF2ED1;
+  --neon-cyan: #00F5FF;
+  --neon-purple: #8A00C4;
+  --bg-dark: #0B0F1A;
+}
+
+/* NEON PURPLE */
+
+
+.neon-button {
+  background-color: var(--neon-purple);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+
+  /* brilho neon forte */
+  box-shadow:
+    0 0 5px var(--neon-purple),
+    0 0 15px var(--neon-purple),
+    0 0 30px var(--neon-purple),
+    0 0 60px var(--neon-purple);
+}
+
+/* hover → brilho diminui */
+.neon-button:hover {
+  box-shadow:
+    0 0 3px var(--neon-purple),
+    0 0 8px var(--neon-purple),
+    0 0 15px var(--neon-purple);
+}
+
+/* ------- */
+
+.neon-text {
+  color: white;
+
+  /* glow elegante */
+  text-shadow:
+    0 0 10px var(--neon-purple),
+    0 0 30px var(--neon-purple);
+}
+
+.neon-text:hover {
+  text-shadow:
+    0 0 8px var(--neon-purple),
+    0 0 28px var(--neon-purple);
+}
+
+/* ----- */
+
+
+.neon-outline-button {
+  background: transparent;
+  border: 3px solid var(--neon-purple);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.neon-outline-button:hover {
+  background: var(--neon-purple);
+  color: white;
+  box-shadow:
+    0 0 10px var(--neon-purple),
+    0 0 20px var(--neon-purple),
+    0 0 40px var(--neon-purple);
+}
+
+/* Hover */
+
+.neon-hover:hover {
+  box-shadow:
+    0 0 3px var(--neon-purple),
+    0 0 8px var(--neon-purple),
+    0 0 15px var(--neon-purple);
+}
