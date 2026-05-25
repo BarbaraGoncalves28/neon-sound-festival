@@ -4,7 +4,9 @@ import Layout from "./Layout";
 import { Home } from "./components/Home";
 import { LineupPage } from "./components/LineupPage";
 import { TicketsPage } from "./components/TicketsPage";
-import Login from "./components/Login";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import Perfil from "./components/Perfil";
 import MyTickets from "./components/MyTickets";
 
@@ -27,7 +29,9 @@ const App: React.FC = () => {
           {/* Rotas normais */}
           <Route path="/" element={<Home />} />
           <Route path="/lineup" element={<LineupPage />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/meus-ingressos" element={<MyTickets />} />
           <Route path="/ingressos" element={<TicketsPage />} />

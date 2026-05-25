@@ -333,7 +333,7 @@ function formatPhone(value: string) {
   /* INFO EVENTO */
   pdf.setFontSize(12);
   pdf.text("Local: Autódromo de Interlagos, Av. Senador Lago Branco, 251 Interlagos – São Paulo/SP ", 30, 175);
-  pdf.text("Data: 28 • 29 • 30 Junho 2026", 30, 185);
+  pdf.text("Data: 28 • 29 • 30 Junho 2027", 30, 185);
   pdf.text("Apresente este QR Code na entrada.", 30, 195);
 
   /* RODAPÉ */
@@ -359,7 +359,7 @@ function formatPhone(value: string) {
       Tickets
   </h2>
   <p className="text-gray-400 mt-4 max-w-xl mx-auto">
-    Garanta seu lugar no Neon Sound Festival 2026
+    Garanta seu lugar no Neon Sound Festival 2027
   </p>
 </div>
 

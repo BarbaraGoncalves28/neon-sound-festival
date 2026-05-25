@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Menu, Ticket, User, X } from "lucide-react";
 import logo from "../assets/images/logo.jpg";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export function Navbar() {

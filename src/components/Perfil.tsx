@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { User, Mail, Lock, Bell, Camera, Eye, EyeOff } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Perfil() {
   const { user, updateUser } = useAuth();

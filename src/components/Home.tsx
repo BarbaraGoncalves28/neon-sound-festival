@@ -51,7 +51,7 @@ type Ticket = {
    MOCK DATA (Produção simulada)
 =================================*/
 
-const eventDate = new Date("2026-06-28T18:00:00");
+const eventDate = new Date("2027-06-28T18:00:00");
 
 const headliners: Headliner[] = [
   {
@@ -350,9 +350,9 @@ useEffect(() => {
 
         <div className="relative z-10 px-6">
           <h1 className="neon-text text-5xl md:text-7xl font-extrabold mb-6">
-  Neon Sound Festival 2026
+  Neon Sound Festival 2027
 </h1>
-          <p className="text-xl mb-2 font-medium">28, 29 e 30 de Junho de 2026</p>
+          <p className="text-xl mb-2 font-medium">28, 29 e 30 de Junho de 2027</p>
           <p className="text-lg mb-6 font-medium">São Paulo - Brasil</p>
 
           <div className="flex gap-6 justify-center mb-10">
@@ -584,7 +584,7 @@ useEffect(() => {
         Local do Festival
       </h2>
       <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-        Tudo o que você precisa saber para chegar ao Neon Sound Festival 2026.
+        Tudo o que você precisa saber para chegar ao Neon Sound Festival 2027.
       </p>
     </div>
 
