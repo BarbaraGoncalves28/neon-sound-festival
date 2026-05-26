@@ -23,8 +23,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   function register(name: string, email: string, password: string): AuthActionResult {
+    const result = createUser({ name, email, password });
 
-    return createUser({ name, email, password });
+    if (result.success && result.user) {
+      setUser(result.user);
+    }
+
+    return result;
   }
 
   function logout() {

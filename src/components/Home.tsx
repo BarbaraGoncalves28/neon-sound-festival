@@ -193,11 +193,11 @@ const stages: Stage[] = [
 ];
 
 const initialTickets: Ticket[] = [
-  { id: "1", name: "Pista", currentBatch: "Lote 2", price: 750, remaining: 112000 },
-  { id: "2", name: "VIP", currentBatch: "Lote 1", price: 1200, remaining: 42000 },
-  { id: "3", name: "Backstage", currentBatch: "Lote 1", price: 2500, remaining: 8400 },
-  { id: "4", name: "Meia-entrada", currentBatch: "Lote 2", price: 325, remaining: 84000 },
-  { id: "5", name: "Passaporte 3 dias", currentBatch: "Lote 1", price: 1650, remaining: 33600 },
+  { id: "pista", name: "Pista", currentBatch: "Lote 2", price: 750, remaining: 112000 },
+  { id: "vip", name: "VIP", currentBatch: "Lote 1", price: 1200, remaining: 42000 },
+  { id: "backstage", name: "Backstage", currentBatch: "Lote 1", price: 2500, remaining: 8400 },
+  { id: "meiaentrada", name: "Meia-entrada", currentBatch: "Lote 2", price: 325, remaining: 84000 },
+  { id: "passaporte", name: "Passaporte 3 dias", currentBatch: "Lote 1", price: 1650, remaining: 33600 },
 ];
 
 const formatNumberTickets = (value: number) =>
@@ -214,6 +214,36 @@ const formatPriceTickets = (value: number) =>
 =================================*/
 
 export function Home() {
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  const [newsletterError, setNewsletterError] = useState("");
+
+  const handleNewsletterSubscribe = () => {
+
+  // valida vazio
+  if (!newsletterEmail.trim()) {
+    setNewsletterError("Digite um email.");
+    return;
+  }
+
+  // valida formato simples
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  if (!emailRegex.test(newsletterEmail)) {
+    setNewsletterError("Digite um email válido.");
+    return;
+  }
+
+  // limpa erro
+  setNewsletterError("");
+
+  // ativa sucesso
+  setNewsletterSubscribed(true);
+
+  // opcional:
+  // limpar campo depois
+  // setNewsletterEmail("");
+};
+
   const navigate = useNavigate();
   const [tickets, setTickets] = useState(initialTickets);
   const [timeLeft, setTimeLeft] = useState({
@@ -750,38 +780,103 @@ useEffect(() => {
 
       {/* NEWSLETTER */}
       <section className="py-24 px-6 text-center">
-        <h2 className="neon-text text-4xl font-bold mb-6">
-          Receba Novidades do Festival
-        </h2>
+  <h2 className="neon-text text-4xl font-bold mb-6">
+    Receba Novidades do Festival
+  </h2>
 
-        <div className="flex flex-col md:flex-row justify-center gap-8 max-w-xl mx-auto">
-          <input
-  type="email"
-  placeholder="Seu email"
-  value={newsletterEmail}
-  onChange={(e) => setNewsletterEmail(e.target.value)}
-  className="
-    px-4
-    py-3
-    rounded-full
-    bg-zinc-900
-    border
-    border-zinc-700
-    text-white
-    placeholder-gray-400
-    w-full
-    focus:outline-none
-    focus:border-[var(--neon-purple)]
-    focus:shadow-[0_0_6px_var(--neon-purple)]
-    transition-all
-  "
-/>
-          <button className="neon-button transition-all duration-300  cursor-pointer px-6 rounded-full font-bold text-white py-2 hover:bg-purple-600 border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] neon-text
-          ">
-            Inscrever
-          </button>
+  {!newsletterSubscribed ? (
+
+    <div className="flex flex-col md:flex-row justify-center gap-8 max-w-xl mx-auto">
+
+      <input
+        type="email"
+        placeholder="Seu email"
+        value={newsletterEmail}
+        onChange={(e) => setNewsletterEmail(e.target.value)}
+        className="
+          px-4
+          py-3
+          rounded-full
+          bg-zinc-900
+          border
+          border-zinc-700
+          text-white
+          placeholder-gray-400
+          w-full
+          focus:outline-none
+          focus:border-[var(--neon-purple)]
+          focus:shadow-[0_0_6px_var(--neon-purple)]
+          transition-all
+        "
+      />
+
+      {newsletterError && (
+  <p className="text-red-400 text-sm mt-2">
+    {newsletterError}
+  </p>
+)}
+
+      <button
+        onClick={handleNewsletterSubscribe}
+        className="neon-button transition-all duration-300 cursor-pointer px-6 rounded-full font-bold text-white py-2 hover:bg-purple-600 border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] neon-text"
+      >
+        Inscrever
+      </button>
+
+    </div>
+
+  ) : (
+
+    <div
+      className="
+        max-w-2xl
+        mx-auto
+        mt-10
+        p-10
+        rounded-3xl
+        border
+        border-purple-500
+        bg-zinc-900/70
+        backdrop-blur-md
+        animate-fade-in
+      "
+      style={{
+        boxShadow: "0 0 40px rgba(168,85,247,0.25)",
+      }}
+    >
+
+      <h3 className="text-3xl font-bold neon-text mb-4">
+        Bem-vindo à Lista VIP
+      </h3>
+
+      <p className="text-gray-300 mb-2">
+        As novidades do Neon Sound Festival serão enviadas para:
+      </p>
+
+      <p className="text-purple-400 font-bold text-lg mb-8">
+        {newsletterEmail}
+      </p>
+
+      <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-300">
+
+        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
+          Pré-venda exclusiva
         </div>
-      </section>
+
+        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
+           Line-up antecipado
+        </div>
+
+        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
+           Sorteios VIP
+        </div>
+
+      </div>
+
+    </div>
+
+  )}
+</section>
     </div>
   );
 }

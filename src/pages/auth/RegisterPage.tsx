@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { AuthPageShell } from "../../components/auth/AuthPageShell";
 import { AuthField } from "../../components/auth/AuthField";
 import { usePasswordCriteria } from "../../hooks/usePasswordCriteria";
+import toast from "react-hot-toast";
 
 const emailPattern = /\S+@\S+\.\S+/;
 
 export default function RegisterPage() {
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -23,6 +24,12 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const passwordCriteria = usePasswordCriteria(password);
+
+  useEffect(() => {
+  if (user) {
+    navigate("/");
+  }
+}, [user, navigate]);
 
   function validate() {
     const nextErrors = { name: "", email: "", password: "", confirmPassword: "", acceptTerms: "" };
@@ -78,8 +85,11 @@ export default function RegisterPage() {
     const result = register(name, email, password);
 
     if (result.success) {
-      navigate("/login");
+        toast.success("Conta criada com sucesso!");
+      navigate("/");
     } else {
+        toast.error(result.message);
+
       setErrors((prev) => ({
         ...prev,
         email: result.message,
@@ -87,6 +97,8 @@ export default function RegisterPage() {
     }
   } catch (error) {
     console.error(error);
+
+    toast.error("Erro ao criar conta.")
 
     setErrors((prev) => ({
       ...prev,

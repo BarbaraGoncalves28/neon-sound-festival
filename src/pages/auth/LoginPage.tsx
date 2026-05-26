@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { AuthPageShell } from "../../components/auth/AuthPageShell";
 import { AuthField } from "../../components/auth/AuthField";
+import toast from "react-hot-toast";
 
 const emailPattern = /\S+@\S+\.\S+/;
 
@@ -17,12 +18,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
 
   useEffect(() => {
     setErrors({ email: "", password: "" });
@@ -56,17 +51,32 @@ export default function LoginPage() {
       return;
     }
 
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    try{
+        setIsLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 700));
 
-    const result = login(email, password);
-    setIsLoading(false);
+        const result = login(email, password);
+        setIsLoading(false);
 
-    if (result.success) {
-      navigate("/");
-    } else {
-      setErrors((prev) => ({ ...prev, password: result.message }));
-    }
+         if (result.success) {
+            toast.success("Login realizado com sucesso!");
+         navigate("/");
+         } else {
+            toast.error(result.message);
+            setErrors((prev) => ({ ...prev, password: result.message }));
+      }
+  } catch (error) {
+    console.error(error);
+
+    toast.error("Erro ao entrar na conta.");
+
+    setErrors((prev) => ({ 
+        ...prev, 
+        password: "Erro ao entrar na conta.", 
+        }));
+     } finally {
+        setIsLoading(false);
+     }
   }
 
   return (

@@ -40,8 +40,8 @@ export function createUser(data: AuthRegisterData): AuthActionResult {
 
   if (existing) {
     return {
-      success: false,
-      message: "Já existe uma conta com esse e-mail. Faça login ou utilize outro e-mail.",
+      success: true,
+      user: newUser,
     };
   }
 
@@ -62,7 +62,7 @@ export function createUser(data: AuthRegisterData): AuthActionResult {
 
   return {
     success: true,
-    message: "Conta criada com sucesso. Faça login para continuar.",
+    message: "Conta criada com sucesso. Bem-vindo ao Neon Sound Festival 2027!",
     user: newUser,
   };
 }

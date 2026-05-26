@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
+import { useSearchParams } from "react-router-dom";
 
 /* =========================
 TYPES
@@ -90,8 +91,9 @@ COMPONENT
 ========================= */
 
 export function TicketsPage() {
+  const [searchParams] = useSearchParams();
   const [ticketTypesState, setTicketTypesState] = useState<TicketType[]>(ticketTypes);
-  const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [buyerName, setBuyerName] = useState("");
@@ -107,8 +109,25 @@ export function TicketsPage() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [loadingPayment, setLoadingPayment] = useState(false);
 
+  const selectedTicket =
+    ticketTypesState.find((ticket) => ticket.id === selectedTicketId) ?? null;
+
   const activeBatch =
     selectedTicket?.batches.find((b) => b.remaining > 0) ?? null;
+useEffect(() => {
+  const ticketParam = searchParams.get("ticket");
+
+  if (!ticketParam) return;
+
+  const foundTicket = ticketTypesState.find(
+    (ticket) => ticket.id === ticketParam
+  );
+
+  if (foundTicket && step === 1) {
+    setSelectedTicketId(foundTicket.id);
+    setStep(2);
+  }
+}, [searchParams]);
 
     // UseEffect regressiva tickets restantes
 
@@ -314,7 +333,6 @@ function formatPhone(value: string) {
   pdf.text(`Email: ${buyerEmail}`, 30, 90);
   pdf.text(`Tipo de ingresso: ${selectedTicket?.name}`, 30, 100);
   pdf.text(`Dia do evento: ${selectedDay} de Junho`, 30, 110);
-  pdf.text(`Pagamento: ${paymentMethod}`, 30, 120);
 
   pdf.text(`Ticket ID: ${ticketId}`, 30, 130);
 
@@ -412,7 +430,7 @@ return (
 key={ticket.id}
 className="relative bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-8 rounded-3xl cursor-pointer hover:border-purple-500 hover:shadow-[0_0_25px_rgba(236,72,153,0.3)] transition-all duration-300 hover:-translate-y-2"
 onClick={() => {
-setSelectedTicket(ticket);
+setSelectedTicketId(ticket.id);
 setStep(2);
 }}
 >
@@ -504,7 +522,7 @@ width: `${Math.min(100, 100 - batch.remaining / 10)}%`,
 
         {/* STEP 3 REVIEW */}
 
-        {step === 3 && activeBatch && (
+        {step === 3 && (
           <div className="max-w-lg mx-auto">
 
             <h2 className="text-sm md:text-3xl font-bold text-center neon-text mb-10">
@@ -609,9 +627,9 @@ onChange={(e) => setBuyerCPF(e.target.value)}
 
                 <button
                   onClick={() => setPaymentMethod("pix")}
-                  className={`cursor-pointer font-medium p-4 border rounded-xl ${
+                  className={`cursor-pointer font-medium p-4 border rounded-xl transition-all duration-300 ${
                     paymentMethod === "pix"
-                      ? "border-purple-500"
+                      ? "bg-purple-700 border-purple-700"
                       : "border-purple-700 hover:bg-purple-700 neon-hover"
                   }`}
                 >
@@ -620,9 +638,9 @@ onChange={(e) => setBuyerCPF(e.target.value)}
 
                 <button
                   onClick={() => setPaymentMethod("credito")}
-                  className={`cursor-pointer font-medium p-4 border rounded-xl ${
+                  className={`cursor-pointer font-medium p-4 border rounded-xl transition-all duration-300 ${
                     paymentMethod === "credito"
-                      ? "border-purple-500"
+                      ? "bg-purple-700 border-purple-700"
                       : "border-purple-700 hover:bg-purple-700 neon-hover"
                   }`}
                 >
@@ -631,9 +649,9 @@ onChange={(e) => setBuyerCPF(e.target.value)}
 
                 <button
                   onClick={() => setPaymentMethod("debito")}
-                  className={`cursor-pointer font-medium p-4 border rounded-xl ${
+                  className={`cursor-pointer font-medium p-4 border rounded-xl transition-all duration-300 ${
                     paymentMethod === "debito"
-                      ? "border-purple-500"
+                      ? "bg-purple-700 border-purple-700"
                       : "border-purple-700 hover:bg-purple-700 neon-hover"
                   }`}
                 >
