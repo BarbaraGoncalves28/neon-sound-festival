@@ -3,6 +3,7 @@ import { LogOut, Menu, Ticket, User, X } from "lucide-react";
 import logo from "../assets/images/logo.jpg";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -58,6 +59,29 @@ export function Navbar() {
     setIsUserMenuOpen(false);
   }
 }, [isMobileOpen]);
+
+function handleProtectedPurchase(
+  event?: React.MouseEvent,
+  ticketId?: string
+) {
+  event?.preventDefault();
+
+  if (!user) {
+    toast.error("Faça login para comprar ingressos.");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
+
+    return;
+  }
+
+  if (ticketId) {
+    navigate(`/ingressos?ticket=${ticketId}`);
+  } else {
+    navigate("/ingressos");
+  }
+}
 
   return (
     <header
@@ -175,7 +199,7 @@ shadow-[0_0_6px_rgba(168,85,247,0.7)] flex items-center justify-center">
 
             {/* CTA */}
             <a
-  href="/ingressos"
+  href="/ingressos"  onClick={handleProtectedPurchase}
   className="neon-button transition-all duration-300 text-white py-2 hover:bg-purple-600 px-4 rounded-full border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold
   "
 >
@@ -291,7 +315,8 @@ shadow-[0_0_6px_rgba(168,85,247,0.7)] flex items-center justify-center">
             )}
 
             <a
-              href="/ingressos"
+              href="/ingressos" onClick={(e) => { handleProtectedPurchase(e);
+    setIsMobileOpen(false);}}
               className="neon-button transition-all duration-300 text-sm text-white text-center px-4 py-2 rounded-full mt-5 self-center hover:bg-purple-600 border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold
               "
               onClick={() => setIsMobileOpen(false)}

@@ -19,6 +19,8 @@ import openingone from "../assets/images/opening-one.jpg";
 import openingtwo from "../assets/images/opening-two.jpg";
 import openingthree from "../assets/images/opening-three.jpg";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 /* ===============================
    TYPES
@@ -365,6 +367,26 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
+function handleProtectedPurchase(ticketId?: string) {
+  if (!user) {
+    toast.error("Faça login para comprar ingressos.");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
+
+    return;
+  }
+
+  if (ticketId) {
+    navigate(`/ingressos?ticket=${ticketId}`);
+  } else {
+    navigate("/ingressos");
+  }
+}
+
+const { user } = useAuth();
+
   return (
     <div className="text-white bg-black">
       {/* HERO */}
@@ -412,13 +434,17 @@ useEffect(() => {
 </div>
 
           <div className="flex gap-4 justify-center">
-            <a
-              href="/ingressos"
-              className="neon-button transition-all duration-300 text-white py-3 
-               hover:bg-purple-600 px-4 rounded-full border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold"
-            >
-              Comprar Ingresso
-            </a>
+            <button
+  type="button"
+  onClick={() => handleProtectedPurchase()}
+  className="neon-button transition-all duration-300 text-white py-3 
+  hover:bg-purple-600 px-4 rounded-full border border-purple-500 
+  shadow-[0_0_8px_rgba(168,85,247,0.7)] 
+  hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] 
+  cursor-pointer neon-text font-bold"
+>
+  Comprar Ingresso
+</button>
             <a
   href="/lineup"
   className="neon-outline-button"
@@ -743,7 +769,7 @@ useEffect(() => {
   {formatNumberTickets(ticket.remaining)} restantes
 </p>
 
-          <button onClick={() => navigate(`/ingressos?ticket=${ticket.id}`)} className="mt-6 w-full neon-button transition-all duration-300 text-white py-2 hover:bg-purple-600 px-4 rounded-full border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold
+          <button onClick={() => handleProtectedPurchase(ticket.id)} className="mt-6 w-full neon-button transition-all duration-300 text-white py-2 hover:bg-purple-600 px-4 rounded-full border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold
           ">
             Comprar
           </button>

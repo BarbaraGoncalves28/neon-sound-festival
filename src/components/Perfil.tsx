@@ -27,7 +27,7 @@ export default function Perfil() {
       return;
     }
 
-    updateUser(name, email);
+    updateUser({name, email,});
 
     toast.success("Perfil atualizado");
   }
@@ -54,7 +54,7 @@ export default function Perfil() {
 
     if (!validatePassword(newPassword)) {
       toast.error(
-        "Senha fraca. Use 8+ caracteres, maiúscula, número e símbolo."
+        "Senha atual errada."
       );
       return;
     }
@@ -107,7 +107,7 @@ export default function Perfil() {
 
     setAvatar(base64Image);
 
-    updateUser(name, email, base64Image);
+    updateUser({ name, email, avatarUrl: base64Image,});
 
     toast.success("Foto de perfil atualizada!");
   };
