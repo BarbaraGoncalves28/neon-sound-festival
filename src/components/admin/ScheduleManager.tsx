@@ -303,19 +303,21 @@ export default function ScheduleManager() {
   )
 
   return (
-    <section className="bg-zinc-950 min-h-screen text-white py-14 px-6">
+    <section className="bg-zinc-950 w-full min-h-screen">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen text-white py-14">
 
         {/* HEADER */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold neon-text">
-            Programação do Festival
-          </h2>
+        <div className="flex">
+          <div className="mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold neon-text">
+              Programação do Festival
+            </h2>
 
-          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-            Gerencie artistas, horários e palcos do evento.
-          </p>
+            <p className="text-gray-400 mt-3">
+              Gerencie artistas, horários e palcos do evento.
+            </p>
+          </div>
         </div>
 
         {/* FILTERS */}
