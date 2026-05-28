@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import logo from '../../assets/images/logo.jpg'
 
 interface AuthPageShellProps {
   title: string
@@ -24,19 +25,35 @@ export function AuthPageShell({
       <div className="pointer-events-none absolute -left-16 top-20 h-60 w-60 rounded-full bg-purple-500/10 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-1/4 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid flex-1 gap-6 lg:gap-10 lg:grid-cols-[0.9fr_1.1fr] xl:grid-cols-[1fr_1.2fr]">
-          <section className="order-2 flex flex-col justify-center gap-8 rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_0_50px_rgba(111,38,255,0.12)] backdrop-blur-xl sm:order-1 sm:p-8 lg:p-12">
-            <div className="space-y-4">
-              <span className="inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-purple-200">
-                Neon Sound Festival 2027
-              </span>
-              <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                {title}
-              </h1>
-              <p className="max-w-xl text-sm leading-7 text-white/70 sm:text-base">
-                {description}
-              </p>
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <div className="grid flex-1 gap-6 lg:grid-cols-2 lg:gap-0">
+          <section className="order-2 flex flex-col gap-8 rounded-4xl border border-white/10 bg-white/5 p-6 shadow-[0_0_50px_rgba(111,38,255,0.12)] backdrop-blur-xl sm:order-1 sm:p-8 lg:rounded-r-none lg:p-12 xl:p-14">
+            <div className="space-y-8">
+              <Link
+                to="/"
+                className="inline-flex w-fit items-center gap-4 rounded-full border border-white/10 bg-black/40 px-3 py-2 transition duration-300 hover:border-cyan-300/40 hover:bg-black/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50"
+              >
+                <img
+                  src={logo}
+                  alt="Logotipo do Neon Sound Festival"
+                  className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10"
+                />
+                <span className="text-left text-xs font-semibold uppercase tracking-[0.32em] text-cyan-200">
+                  Voltar para a home
+                </span>
+              </Link>
+
+              <div className="space-y-4">
+                <span className="inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-purple-200">
+                  Neon Sound Festival 2027
+                </span>
+                <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl xl:text-5xl">
+                  {title}
+                </h1>
+                <p className="max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+                  {description}
+                </p>
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -72,8 +89,8 @@ export function AuthPageShell({
             </div>
           </section>
 
-          <section className="order-1 flex items-center justify-center sm:order-2">
-            <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-black/70 p-6 shadow-[0_0_60px_rgba(111,38,255,0.18)] backdrop-blur-2xl sm:p-8 lg:p-10">
+          <section className="order-1 flex items-stretch justify-center sm:order-2">
+            <div className="flex w-full flex-1 flex-col justify-center rounded-4xl border border-white/10 bg-black/70 p-6 shadow-[0_0_60px_rgba(111,38,255,0.18)] backdrop-blur-2xl sm:p-8 lg:rounded-l-none lg:p-12 xl:p-14">
               <div className="mb-10 flex flex-col gap-2">
                 <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">
                   Acesso seguro
