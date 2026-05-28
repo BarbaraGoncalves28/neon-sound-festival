@@ -1,34 +1,35 @@
-export type UserRole = "admin" | "participant";
+export type UserRole = 'admin' | 'participant'
 
 export interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-  avatarUrl?: string | null;
-  createdAt: string;
+  id: string
+  name: string
+  email: string
+  password: string
+  role: UserRole
+  avatarUrl?: string | null
+  createdAt: string
 }
 
 export interface AuthCredentials {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface AuthRegisterData {
-  name: string;
-  email: string;
-  password: string;
+  name: string
+  email: string
+  password: string
 }
 
 export interface AuthUpdatePayload {
-  name: string;
-  email: string;
-  avatarUrl?: string | null;
+  name: string
+  email: string
+  avatarUrl?: string | null
+  password?: string
 }
 
 export interface AuthActionResult {
-  success: boolean;
-  message: string;
-  user?: User;
+  success: boolean
+  message: string
+  user?: User
 }

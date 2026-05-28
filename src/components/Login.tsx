@@ -1,4 +1,1 @@
-export { default } from "../pages/auth/LoginPage";
-
-  );
-}
+export { default } from '../pages/auth/LoginPage'

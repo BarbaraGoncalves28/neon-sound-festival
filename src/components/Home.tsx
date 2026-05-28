@@ -1,908 +1,599 @@
-import { useEffect, useState } from "react";
-import home from "../assets/images/home.png";
-import singerpopone from "../assets/images/singer-pop-one.png";
-import singerrapone from "../assets/images/singer-rap-one.png";
-import singerraptwo from "../assets/images/singer-rap-two.png";
-import singerrapthree from "../assets/images/singer-rap-three.png";
-import singerrapfour from "../assets/images/singer-rap-four.png";
-import singerrapfive from "../assets/images/singer-rap-five.png";
-import singerrockone from "../assets/images/singer-rock-one.png"
-import singerrocktwo from "../assets/images/singer-rock-two.png";
-import singerrockthree from "../assets/images/singer-rock-three.png";
-import singerrockfour from "../assets/images/singer-rock-four.png";
-import singerrockfive from "../assets/images/singer-rock-five.png";
-import singerpoptwo from "../assets/images/singer-pop-two.png";
-import singerpopthree from "../assets/images/singer-pop-three.png";
-import singerpopfour from "../assets/images/singer-pop-four.png";
-import singerpopfive from "../assets/images/singer-pop-five.png";
-import openingone from "../assets/images/opening-one.jpg";
-import openingtwo from "../assets/images/opening-two.jpg";
-import openingthree from "../assets/images/opening-three.jpg";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import toast from "react-hot-toast";
+import type { FormEvent } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  artists as defaultFestivalArtists,
+  eventDate,
+  festivalDays,
+  headliners,
+  heroImage,
+  openingArtists,
+  stages,
+  ticketSummaries,
+} from '../data/festivalData'
+import { useProtectedNavigation } from '../hooks/useProtectedNavigation'
+import {
+  ADMIN_DATA_UPDATED_EVENT,
+  getStoredArtists,
+} from '../modules/admin/store/adminPersistence'
 
-/* ===============================
-   TYPES
-=================================*/
+type CountdownState = {
+  days: number
+  hours: number
+  minutes: number
+  seconds: number
+}
 
-type Headliner = {
-  id: string;
-  name: string;
-  genre: string;
-  day: number;
-  image: string;
-};
+const initialCountdown: CountdownState = {
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+}
 
-type Stage = {
-  id: string;
-  name: string;
-  capacity: number;
-  style: string;
-};
+function getCountdown(): CountdownState {
+  const now = Date.now()
+  const distance = eventDate.getTime() - now
 
-type Ticket = {
-  id: string;
-  name: string;
-  currentBatch: string;
-  price: number;
-  remaining: number;
-};
-
-/* ===============================
-   MOCK DATA (Produção simulada)
-=================================*/
-
-const eventDate = new Date("2027-06-28T18:00:00");
-
-const headliners: Headliner[] = [
-  {
-    id: "1",
-    name: "Maya Skyline",
-    genre: "Pop",
-    day: 28,
-    image: singerpopone,
-  },
-  {
-    id: "2",
-    name: "MC Eclipse",
-    genre: "Rap/Hip-Hop",
-    day: 30,
-    image: singerrapone,
-  },
-  {
-    id: "3",
-    name: "Crimson Avenue",
-    genre: "Rock",
-    day: 28,
-    image: singerrockone,
-  },
-  {
-    id: "4",
-    name: "Neon Aurora",
-    genre: "Pop/Electronic",
-    day: 30,
-    image: singerpoptwo,
-  },
-  {
-    id: "5",
-    name: "Lex Phantom",
-    genre: "Rap/Hip-Hop",
-    day: 28,
-    image: singerraptwo,
-  },
-  {
-    id: "6",
-    name: "Atlas Riff",
-    genre: "Rock",
-    day: 29,
-    image: singerrocktwo,
-  },
-  {
-    id: "7",
-    name: "Kai Solaris",
-    genre: "Pop",
-    day: 28,
-    image: singerpopthree,
-  },
-  {
-    id: "8",
-    name: "Razor Nova",
-    genre: "Rap/Hip-Hop",
-    day: 28,
-    image: singerrapthree,
-  },
-  {
-    id: "9",
-    name: "Midnight Reactor",
-    genre: "Rock",
-    day: 29,
-    image: singerrockthree,
-  },
-  {
-    id: "10",
-    name: "Velvet Bloom",
-    genre: "Pop/Electronic",
-    day: 30,
-    image: singerpopfour,
-  },
-  {
-    id: "11",
-    name: "Zyro Blaze",
-    genre: "Rap/Hip-Hop",
-    day: 30,
-    image: singerrapfour,
-  },
-  {
-    id: "12",
-    name: "Electric Dominion",
-    genre: "Rock",
-    day: 29,
-    image: singerrockfour,
-  },
-  {
-    id: "13",
-    name: "J Luna",
-    genre: "Pop",
-    day: 29,
-    image: singerpopfive,
-  },
-  {
-    id: "14",
-    name: "Krown Zero",
-    genre: "Rap",
-    day: 30,
-    image: singerrapfive,
-  },
-  {
-    id: "15",
-    name: "Silver Howl",
-    genre: "Rock",
-    day: 29,
-    image: singerrockfive,
-  }, 
-];
-
-const openingArtists = [
-  {
-    id: 1,
-    name: "The Weeknd",
-    genre: "Dance-pop/R&B",
-    day: 28,
-    image: openingone,
-  },
-  {
-    id: 2,
-    name: "Ariana Grande",
-    genre: "Pop R&B/Dance",
-    day: 29,
-    image: openingtwo,
-  },
-  {
-    id: 3,
-    name: "Dua Lipa",
-    genre: "Dance/Electropop",
-    day: 30,
-    image: openingthree,
-  }
-];
-
-const stages: Stage[] = [
-  { id: "a", name: "Palco A", capacity: 100000, style: "Mainstream/Headliners" },
-  { id: "b", name: "Palco B", capacity: 60000, style: "Rock/Indie" },
-  { id: "c", name: "Palco Eletrônico", capacity: 40000, style: "EDM/Techno" },
-  { id: "d", name: "Palco Alternativo", capacity: 20000, style: "Experimental/Novos Artistas" },
-];
-
-const initialTickets: Ticket[] = [
-  { id: "pista", name: "Pista", currentBatch: "Lote 2", price: 750, remaining: 112000 },
-  { id: "vip", name: "VIP", currentBatch: "Lote 1", price: 1200, remaining: 42000 },
-  { id: "backstage", name: "Backstage", currentBatch: "Lote 1", price: 2500, remaining: 8400 },
-  { id: "meiaentrada", name: "Meia-entrada", currentBatch: "Lote 2", price: 325, remaining: 84000 },
-  { id: "passaporte", name: "Passaporte 3 dias", currentBatch: "Lote 1", price: 1650, remaining: 33600 },
-];
-
-const formatNumberTickets = (value: number) =>
-  value.toLocaleString("pt-BR");
-
-const formatPriceTickets = (value: number) =>
-  value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-
-/* ===============================
-   COMPONENT
-=================================*/
-
-export function Home() {
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
-  const [newsletterError, setNewsletterError] = useState("");
-
-  const handleNewsletterSubscribe = () => {
-
-  // valida vazio
-  if (!newsletterEmail.trim()) {
-    setNewsletterError("Digite um email.");
-    return;
+  if (distance <= 0) {
+    return initialCountdown
   }
 
-  // valida formato simples
-  const emailRegex = /\S+@\S+\.\S+/;
-
-  if (!emailRegex.test(newsletterEmail)) {
-    setNewsletterError("Digite um email válido.");
-    return;
-  }
-
-  // limpa erro
-  setNewsletterError("");
-
-  // ativa sucesso
-  setNewsletterSubscribed(true);
-
-  // opcional:
-  // limpar campo depois
-  // setNewsletterEmail("");
-};
-
-  const navigate = useNavigate();
-  const [tickets, setTickets] = useState(initialTickets);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-
-  useEffect(() => {
-  const interval = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = eventDate.getTime() - now;
-
-    if (distance <= 0) {
-      clearInterval(interval);
-      return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (distance % (1000 * 60 * 60)) / (1000 * 60)
-    );
-    const seconds = Math.floor(
-      (distance % (1000 * 60)) / 1000
-    );
-
-    setTimeLeft({ days, hours, minutes, seconds });
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, []);
-
-const formatNumber = (num: number) => {
-  return num.toString().padStart(2, "0");
-}; 
-
-const MAX_TICKETS = 280000;
-const MAX_ARTISTS = 15;
-
-const [stats, setStats] = useState({
-  artists: 5,      // começa menor
-  sold: 220552,     // começa menor
-  stages: 4,
-  days: 3,
-});
-
-useEffect(() => {
-  let timeout: ReturnType<typeof setTimeout>;
-
-  const updateSystem = () => {
-    setStats((prevStats) => {
-      if (prevStats.sold >= MAX_TICKETS) return prevStats;
-
-      const randomIncrease = Math.floor(Math.random() * 120) + 10;
-
-      const actualIncrease = Math.min(
-        randomIncrease,
-        MAX_TICKETS - prevStats.sold
-      );
-
-      // Atualiza tickets proporcionalmente
-      setTickets((prevTickets) => {
-        let remainingToRemove = actualIncrease;
-
-        const updated = prevTickets.map((ticket) => {
-          if (remainingToRemove <= 0 || ticket.remaining <= 0)
-            return ticket;
-
-          // venda aleatória por categoria
-          const randomSell = Math.min(
-            Math.floor(Math.random() * remainingToRemove),
-            ticket.remaining
-          );
-
-          remainingToRemove -= randomSell;
-
-          return {
-            ...ticket,
-            remaining: ticket.remaining - randomSell,
-          };
-        });
-
-        return updated;
-      });
-
-      return {
-        ...prevStats,
-        sold: prevStats.sold + actualIncrease,
-      };
-    });
-
-    const nextDelay = Math.random() * 2000 + 400;
-    timeout = setTimeout(updateSystem, nextDelay);
-  };
-
-  updateSystem();
-
-  return () => clearTimeout(timeout);
-}, []);
-
-useEffect(() => {
-  const interval = setInterval(() => {
-    setStats((prev) => {
-      if (prev.artists >= MAX_ARTISTS) return prev;
-
-      return {
-        ...prev,
-        artists: prev.artists + 1,
-      };
-    });
-  }, 60000); // 1 minuto
-
-  return () => clearInterval(interval);
-}, []);
-
-function handleProtectedPurchase(ticketId?: string) {
-  if (!user) {
-    toast.error("Faça login para comprar ingressos.");
-
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
-
-    return;
-  }
-
-  if (ticketId) {
-    navigate(`/ingressos?ticket=${ticketId}`);
-  } else {
-    navigate("/ingressos");
+  return {
+    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((distance / (1000 * 60)) % 60),
+    seconds: Math.floor((distance / 1000) % 60),
   }
 }
 
-const { user } = useAuth();
+export function Home() {
+  const openProtectedRoute = useProtectedNavigation()
+  const [countdown, setCountdown] = useState<CountdownState>(getCountdown)
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterError, setNewsletterError] = useState('')
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
+  const [liveSoldCount, setLiveSoldCount] = useState(220552)
+  const [additionalArtists, setAdditionalArtists] = useState(() => {
+    const defaultNames = new Set(
+      defaultFestivalArtists.map((artist) => artist.name.trim().toLowerCase()),
+    )
+
+    return getStoredArtists().filter(
+      (artist) => !defaultNames.has(artist.name.trim().toLowerCase()),
+    )
+  })
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCountdown(getCountdown())
+    }, 1000)
+
+    return () => window.clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setLiveSoldCount((previous) =>
+        Math.min(previous + Math.floor(Math.random() * 35 + 8), 280000),
+      )
+    }, 5000)
+
+    return () => window.clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const syncAdditionalArtists = () => {
+      const defaultNames = new Set(
+        defaultFestivalArtists.map((artist) => artist.name.trim().toLowerCase()),
+      )
+
+      setAdditionalArtists(
+        getStoredArtists().filter(
+          (artist) => !defaultNames.has(artist.name.trim().toLowerCase()),
+        ),
+      )
+    }
+
+    window.addEventListener('storage', syncAdditionalArtists)
+    window.addEventListener(ADMIN_DATA_UPDATED_EVENT, syncAdditionalArtists)
+
+    return () => {
+      window.removeEventListener('storage', syncAdditionalArtists)
+      window.removeEventListener(ADMIN_DATA_UPDATED_EVENT, syncAdditionalArtists)
+    }
+  }, [])
+
+  const metrics = useMemo(
+    () => [
+      {
+        label: 'Artistas confirmados',
+        value: `+${defaultFestivalArtists.length + additionalArtists.length}`,
+      },
+      { label: 'Palcos ativos', value: `${stages.length}` },
+      { label: 'Dias de festival', value: `${festivalDays.length}` },
+      { label: 'Capacidade total', value: '+220k' },
+    ],
+    [additionalArtists],
+  )
+
+  const countdownCards = useMemo(
+    () => [
+      { label: 'Dias', value: countdown.days },
+      { label: 'Horas', value: countdown.hours },
+      { label: 'Min', value: countdown.minutes },
+      { label: 'Seg', value: countdown.seconds },
+    ],
+    [countdown],
+  )
+
+  function handleNewsletterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const normalizedEmail = newsletterEmail.trim().toLowerCase()
+
+    if (!normalizedEmail) {
+      setNewsletterError('Digite seu e-mail para receber novidades.')
+      return
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setNewsletterError('Informe um e-mail válido.')
+      return
+    }
+
+    setNewsletterError('')
+    setNewsletterSubscribed(true)
+    setNewsletterEmail(normalizedEmail)
+  }
 
   return (
-    <div className="text-white bg-black">
-      {/* HERO */}
-      <section className="relative h-screen flex items-center justify-center text-center">
+    <div className="bg-black text-white">
+      <section className="relative isolate overflow-hidden">
         <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{
-      backgroundImage: `url(${home})`,
-    }}
-  ></div>
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-black/70" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(168,85,247,0.28),transparent_38%)]"
+          aria-hidden="true"
+        />
 
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 pb-20 pt-32 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <span className="inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-purple-200">
+              Festival multi-palco • São Paulo
+            </span>
+            <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl lg:text-7xl">
+              Neon Sound Festival 2027 com experiência premium em qualquer tela
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
+              Três dias de festival, quatro palcos e uma jornada pensada para
+              discovery, compra de ingressos e gestão do evento com fluidez de
+              produto real.
+            </p>
 
-        <div className="relative z-10 px-6">
-          <h1 className="neon-text text-5xl md:text-7xl font-extrabold mb-6">
-  Neon Sound Festival 2027
-</h1>
-          <p className="text-xl mb-2 font-medium">28, 29 e 30 de Junho de 2027</p>
-          <p className="text-lg mb-6 font-medium">São Paulo - Brasil</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() =>
+                  openProtectedRoute(
+                    '/ingressos',
+                    'Faça login para garantir seu ingresso.',
+                  )
+                }
+                className="neon-button rounded-full px-6 py-3 text-sm font-bold text-white sm:px-8"
+              >
+                Comprar ingresso
+              </button>
+              <Link
+                to="/lineup"
+                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:px-8"
+              >
+                Explorar line-up
+              </Link>
+            </div>
+          </div>
 
-          <div className="flex gap-6 justify-center mb-10">
-
-  {[
-    { label: "Dias", value: timeLeft.days },
-    { label: "Horas", value: timeLeft.hours },
-    { label: "Min", value: timeLeft.minutes },
-    { label: "Seg", value: timeLeft.seconds },
-  ].map((item) => (
-    <div
-      key={item.label}
-      className="flex flex-col items-center px-6 py-4 rounded-xl backdrop-blur-md bg-black/20 border border-purple-500/40 shadow-lg"
-      style={{
-        boxShadow: "0 0 15px rgba(168, 85, 247, 0.3)",
-      }}
-    >
-      <span className="text-5xl font-mono tracking-widest text-white">
-        {formatNumber(item.value)}
-      </span>
-      <span className="text-xs uppercase tracking-wider text-purple-300 mt-2">
-        {item.label}
-      </span>
-    </div>
-  ))}
-
-</div>
-
-          <div className="flex gap-4 justify-center">
-            <button
-  type="button"
-  onClick={() => handleProtectedPurchase()}
-  className="neon-button transition-all duration-300 text-white py-3 
-  hover:bg-purple-600 px-4 rounded-full border border-purple-500 
-  shadow-[0_0_8px_rgba(168,85,247,0.7)] 
-  hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] 
-  cursor-pointer neon-text font-bold"
->
-  Comprar Ingresso
-</button>
-            <a
-  href="/lineup"
-  className="neon-outline-button"
->
-  Ver Line-up
-</a>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {countdownCards.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-3xl border border-white/10 bg-black/35 p-5 shadow-[0_0_20px_rgba(168,85,247,0.14)] backdrop-blur-md"
+              >
+                <p className="text-3xl font-semibold sm:text-4xl">
+                  {String(item.value).padStart(2, '0')}
+                </p>
+                <p className="mt-2 text-xs uppercase tracking-[0.3em] text-purple-200">
+                  {item.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* HEADLINERS */}
-<section className="py-24 px-6 max-w-7xl mx-auto">
-
-<div className="text-center mb-20">
-  <h2 className="text-4xl md:text-5xl font-bold text-center neon-text">
-      Headliners
-  </h2>
-  <p className="text-gray-400 mt-4 max-w-xl mx-auto">
-    Os maiores nomes da música dominando o palco principal.
-  </p>
-</div>
-
-  <div className="grid md:grid-cols-4 gap-10">
-    {headliners.map((artist) => (
-      <div
-        key={artist.id}
-        className="group relative rounded-2xl overflow-hidden bg-zinc-900/60 backdrop-blur-md border border-purple-500/70 transition-all duration-500 hover:-translate-y-3"
-        style={{
-          boxShadow: "0 0 80px rgba(168, 85, 247, 0.15)",
-        }}
-      >
-        {/* Glow no hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500"
-          style={{
-            boxShadow: "0 0 40px rgba(168, 85, 247, 0.4)",
-          }}
-        ></div>
-
-        {/* Imagem */}
-        <div className="relative overflow-hidden">
-          <img
-            src={artist.image}
-            alt={artist.name}
-            className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-
-          {/* Overlay gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-        </div>
-
-        {/* Conteúdo */}
-        <div className="relative p-6">
-          <h3 className="neon-text text-2xl font-bold text-white tracking-wide group-hover:text-purple-400 transition">
-            {artist.name}
-          </h3>
-
-          <p className="text-sm text-purple-300 mt-2 uppercase tracking-wider">
-            {artist.genre}
-          </p>
-
-          <p className="text-sm mt-2 text-gray-400">
-            Dia {artist.day}
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-
-
-{/* OPENING ACTS */}
-<section className="py-24 px-6 bg-zinc-950 relative overflow-hidden">
-
-  {/* Glow de fundo */}
-  <div className="absolute inset-0"></div>
-
-  <div className="relative max-w-7xl mx-auto">
-
-  <div className="text-center mb-20">
-    <h2 className="text-4xl md:text-5xl font-bold text-center neon-text">
-      Abertura Oficial
-    </h2>
-    <p className="text-gray-400 mt-4 max-w-xl mx-auto">
-      Três artistas, três noites, o início de uma experiência inesquecível.
-    </p>
-  </div>
-
-    <div className="grid md:grid-cols-3 gap-12">
-
-      {openingArtists.map((artist, index) => (
-        <div
-          key={artist.id}
-          className="group relative rounded-3xl overflow-hidden backdrop-blur-xl bg-zinc-900/60 border border-purple-500/70 transition-all duration-500 hover:-translate-y-4"
-          style={{
-            boxShadow: "0 0 80px rgba(168, 85, 247, 0.15)",
-          }}
-        >
-
-          {/* DIA GIGANTE NO FUNDO */}
-          <span className="absolute -top-6 -right-6 text-[120px] font-extrabold text-purple-500/10 select-none">
-            {index + 1}
-          </span>
-
-          {/* IMAGEM */}
-          <div className="relative overflow-hidden">
-            <img
-              src={artist.image}
-              alt={artist.name}
-              className="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-
-            {/* overlay escuro */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-          </div>
-
-          {/* CONTEÚDO */}
-          <div className="relative p-8">
-
-            {/* Badge */}
-            <span className="inline-block text-xs tracking-widest uppercase text-purple-400 mb-4">
-              Primeiros Beats
-            </span>
-
-            <h3 className="neon-text text-3xl font-bold text-white group-hover:text-purple-400 transition">
-              {artist.name}
-            </h3>
-
-            <p className="text-purple-300 mt-3 uppercase tracking-wide text-sm">
-              {artist.genre}
-            </p>
-
-            <p className="text-gray-400 mt-2">
-              Dia {artist.day} • 18:00
-            </p>
-
-          </div>
-
-          {/* Glow hover forte */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"
-            style={{
-              boxShadow: "0 0 60px rgba(168, 85, 247, 0.4)",
-            }}
-          ></div>
-
-        </div>
-      ))}
-
-    </div>
-
-  </div>
-</section>
-
-      {/* STAGES */}
-      <section className="py-24 px-6">
-        <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-center neon-text">
-            Experiência Multi-Palco
-            </h2>
-          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-            Uma jornada sonora que atravessa estilos, 
-            luzes e sensações.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {stages.map((stage) => (
-            <div
-              key={stage.id}
-              className="bg-zinc-900 p-6 rounded-2xl"
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {metrics.map((metric) => (
+            <article
+              key={metric.label}
+              className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6"
             >
-              <h3 className="neon-text text-2xl font-bold mb-2">
-                {stage.name}
-              </h3>
-              <p className="text-gray-400 mb-2">
-                Capacidade: {stage.capacity.toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-500">
-                Estilo: {stage.style}
-              </p>
-            </div>
+              <p className="text-3xl font-bold neon-text">{metric.value}</p>
+              <p className="mt-2 text-sm text-white/65">{metric.label}</p>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* LOCAL EVENTO */}
-
-      <section className="py-24 px-6 bg-zinc-950">
-  <div className="max-w-7xl mx-auto">
-
-    {/* TÍTULO */}
-    <div className="text-center mb-20">
-      <h2 className="text-4xl md:text-5xl font-bold neon-text">
-        Local do Festival
-      </h2>
-      <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-        Tudo o que você precisa saber para chegar ao Neon Sound Festival 2027.
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-2 gap-16 items-start">
-
-      {/* COLUNA ESQUERDA */}
-      <div className="space-y-10 grid md:grid-cols-2">
-
-        {/* Endereço */}
-        <div>
-          <h3 className="text-2xl font-bold neon-text mb-4">
-             Endereço
-          </h3>
-          <p className="text-gray-400 leading-relaxed">
-            Neon Sound Festival 2026 <br />
-            Autódromo de Interlagos <br />
-            Av. Senador Lago Branco, 251 <br />
-            Interlagos – São Paulo/SP <br />
-            CEP 07801-020
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-2xl">
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            Headliners que movem o line-up
+          </h2>
+          <p className="mt-3 text-white/65">
+            Curadoria visual e editorial consistente, com cards fluidos e
+            hierarquia clara para navegar bem em mobile, desktop e telas largas.
           </p>
-
-          <a
-            href="https://www.google.com/maps?q=Autódromo+de+Interlagos"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium inline-block mt-4 text-purple-400 hover:text-purple-300 transition"
-          >
-            🔗 Ver no Google Maps
-          </a>
         </div>
 
-        {/* Transporte */}
-        <div>
-          <h3 className="text-2xl font-bold neon-text mb-4">
-             Transporte Público
-          </h3>
-          <ul className="text-gray-400 space-y-2">
-            <li>• Estação Autódromo (Linha 8 – Esmeralda)</li>
-            <li>• Linhas especiais de ônibus do metrô</li>
-            <li>• Uber / 99 com ponto oficial do evento</li>
-          </ul>
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          {headliners.map((artist) => (
+            <article
+              key={artist.id}
+              className="group overflow-hidden rounded-4xl border border-white/10 bg-zinc-950/80 shadow-[0_0_50px_rgba(168,85,247,0.08)]"
+            >
+              <div className="relative h-72 overflow-hidden">
+                <img
+                  src={artist.image}
+                  alt={`${artist.name}, artista do gênero ${artist.genre}`}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/45 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-xs uppercase tracking-[0.28em] text-purple-200">
+                    Dia {artist.day}
+                  </p>
+                  <h3 className="mt-2 text-2xl font-bold text-white">
+                    {artist.name}
+                  </h3>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-sm uppercase tracking-[0.22em] text-purple-300">
+                  {artist.genre}
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
+      </section>
 
-        {/* Estacionamento */}
-        <div>
-          <h3 className="text-2xl font-bold neon-text mb-4">
-             Estacionamento
-          </h3>
-          <ul className="text-gray-400 space-y-2">
-            <li>• Estacionamento oficial do evento</li>
-            <li>• Vagas limitadas</li>
-            <li>• Compra antecipada recomendada</li>
-          </ul>
-        </div>
-
-        {/* Extras Profissionais */}
-        <div>
-          <h3 className="text-2xl font-bold neon-text mb-4">
-             Informações Importantes
-          </h3>
-          <ul className="text-gray-400 space-y-2">
-            <li>• Portões abrem às 12h</li>
-            <li>• Primeiros shows às 14h - 16h</li>
-            <li>• Área de alimentação completa</li>
-            <li>• Posto médico e segurança 24h</li>
-            <li>• Acessibilidade garantida </li>
-          </ul>
-        </div>
-
-      </div>
-
-      {/* COLUNA DIREITA – MAPA */}
-      <div className="rounded-2xl overflow-hidden border border-purple-500/40 shadow-lg"
-        style={{
-          boxShadow: "0 0 40px rgba(168, 85, 247, 0.2)",
-        }}
-      >
-        <iframe
-          title="Mapa Autódromo de Interlagos"
-          src="https://www.google.com/maps?q=Autódromo+de+Interlagos&output=embed"
-          width="100%"
-          height="450"
-          style={{ border: 0 }}
-          loading="lazy"
-        ></iframe>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-      {/* TICKETS */}
-      <section className="py-24">
-  <div className="max-w-7xl mx-auto px-6">
-
-    <div className="text-center mb-20">
-      <h2 className="text-4xl md:text-5xl font-bold neon-text">
-        Tipos de Ingresso
-      </h2>
-      <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-        Escolha sua experiência e prepare-se para viver o Neon Sound Festival 
-        do seu jeito.
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-3 gap-8">
-      {tickets.map((ticket) => (
-        <div
-          key={ticket.id}
-          className="relative bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-8 rounded-3xl cursor-pointer hover:border-purple-500 hover:shadow-[0_0_25px_rgba(236,72,153,0.3)] transition-all duration-300 hover:-translate-y-2
-          "
-        >
-          <h3 className="neon-text text-2xl font-bold mb-2">
-            {ticket.name}
-          </h3>
-
-          <p className="text-gray-400">
-            {ticket.currentBatch}
-          </p>
-
-          <p className="text-3xl font-bold mt-2">
-  {formatPriceTickets(ticket.price)}
-</p>
-
-          <p className="text-sm text-gray-500 mt-1">
-  {formatNumberTickets(ticket.remaining)} restantes
-</p>
-
-          <button onClick={() => handleProtectedPurchase(ticket.id)} className="mt-6 w-full neon-button transition-all duration-300 text-white py-2 hover:bg-purple-600 px-4 rounded-full border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] cursor-pointer neon-text font-bold
-          ">
-            Comprar
-          </button>
-        </div>
-      ))}
-    </div>
-
-  </div>
-</section>
-
-      {/* STATS */}
-      <section className="bg-zinc-950 py-24 px-6 text-center">
-        <div className="grid md:grid-cols-4 gap-10 max-w-6xl mx-auto">
-          <div>
-            <p className="text-4xl font-bold">+{stats.artists}</p>
-            <p className="text-gray-400">Artistas Confirmados</p>
-          </div>
-          <div>
-            <p className="text-4xl font-bold">
-              +{stats.sold.toLocaleString()}
+      <section className="bg-zinc-950 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 max-w-2xl">
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Abertura oficial com direção de experiência
+            </h2>
+            <p className="mt-3 text-white/65">
+              O bloco de abertura agora escala melhor em telas menores e mantém
+              impacto visual sem quebrar texto, imagem ou espaçamento.
             </p>
-            <p className="text-gray-400">Ingressos Vendidos</p>
           </div>
-          <div>
-            <p className="text-4xl font-bold">{stats.stages}</p>
-            <p className="text-gray-400">Palcos</p>
-          </div>
-          <div>
-            <p className="text-4xl font-bold">{stats.days}</p>
-            <p className="text-gray-400">Dias de Festival</p>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            {openingArtists.map((artist, index) => (
+              <article
+                key={artist.id}
+                className="relative overflow-hidden rounded-4xl border border-white/10 bg-black/50 p-4 sm:p-6"
+              >
+                <span className="pointer-events-none absolute right-3 top-0 text-[6rem] font-black text-purple-500/10 sm:text-[8rem]">
+                  {index + 1}
+                </span>
+                <div className="relative h-72 overflow-hidden rounded-3xl">
+                  <img
+                    src={artist.image}
+                    alt={`${artist.name}, atração de abertura do festival`}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/45 to-transparent" />
+                </div>
+                <div className="relative pt-6">
+                  <p className="text-xs uppercase tracking-[0.3em] text-purple-300">
+                    Primeiros beats
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold">{artist.name}</h3>
+                  <p className="mt-2 text-sm text-white/70">{artist.genre}</p>
+                  <p className="mt-4 text-sm text-white/55">
+                    Dia {artist.day} • 18:00
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* NEWSLETTER */}
-      <section className="py-24 px-6 text-center">
-  <h2 className="neon-text text-4xl font-bold mb-6">
-    Receba Novidades do Festival
-  </h2>
+      {additionalArtists.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mb-10 max-w-2xl">
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Novos artistas adicionados pela curadoria
+            </h2>
+            <p className="mt-3 text-white/65">
+              A base oficial da home continua como referência, e os novos
+              cadastros feitos no painel aparecem aqui automaticamente.
+            </p>
+          </div>
 
-  {!newsletterSubscribed ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {additionalArtists.map((artist) => (
+              <article
+                key={artist.id}
+                className="rounded-3xl border border-white/10 bg-zinc-950/80 p-6 shadow-[0_0_30px_rgba(168,85,247,0.08)]"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.3em] text-purple-300">
+                      Novo cadastro
+                    </p>
+                    <h3 className="mt-3 text-2xl font-bold neon-text">
+                      {artist.name}
+                    </h3>
+                  </div>
 
-    <div className="flex flex-col md:flex-row justify-center gap-8 max-w-xl mx-auto">
+                  <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
+                    {artist.day ? `Dia ${artist.day}` : 'Line-up aberto'}
+                  </span>
+                </div>
 
-      <input
-        type="email"
-        placeholder="Seu email"
-        value={newsletterEmail}
-        onChange={(e) => setNewsletterEmail(e.target.value)}
-        className="
-          px-4
-          py-3
-          rounded-full
-          bg-zinc-900
-          border
-          border-zinc-700
-          text-white
-          placeholder-gray-400
-          w-full
-          focus:outline-none
-          focus:border-[var(--neon-purple)]
-          focus:shadow-[0_0_6px_var(--neon-purple)]
-          transition-all
-        "
-      />
+                <p className="mt-4 text-sm uppercase tracking-[0.2em] text-white/65">
+                  {artist.genre}
+                </p>
 
-      {newsletterError && (
-  <p className="text-red-400 text-sm mt-2">
-    {newsletterError}
-  </p>
-)}
+                <p className="mt-6 text-sm text-white/55">
+                  Artista criado pelo formulário de gestão e somado
+                  automaticamente ao catálogo do festival.
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
-      <button
-        onClick={handleNewsletterSubscribe}
-        className="neon-button transition-all duration-300 cursor-pointer px-6 rounded-full font-bold text-white py-2 hover:bg-purple-600 border border-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.7)] hover:shadow-[0_0_16px_rgba(168,85,247,0.8)] neon-text"
-      >
-        Inscrever
-      </button>
-
-    </div>
-
-  ) : (
-
-    <div
-      className="
-        max-w-2xl
-        mx-auto
-        mt-10
-        p-10
-        rounded-3xl
-        border
-        border-purple-500
-        bg-zinc-900/70
-        backdrop-blur-md
-        animate-fade-in
-      "
-      style={{
-        boxShadow: "0 0 40px rgba(168,85,247,0.25)",
-      }}
-    >
-
-      <h3 className="text-3xl font-bold neon-text mb-4">
-        Bem-vindo à Lista VIP
-      </h3>
-
-      <p className="text-gray-300 mb-2">
-        As novidades do Neon Sound Festival serão enviadas para:
-      </p>
-
-      <p className="text-purple-400 font-bold text-lg mb-8">
-        {newsletterEmail}
-      </p>
-
-      <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-300">
-
-        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
-          Pré-venda exclusiva
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-2xl">
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            Experiência multi-palco sem ruído visual
+          </h2>
+          <p className="mt-3 text-white/65">
+            Informação objetiva para orientar o público rapidamente: capacidade,
+            proposta artística e organização espacial clara.
+          </p>
         </div>
 
-        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
-           Line-up antecipado
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {stages.map((stage) => (
+            <article
+              key={stage.id}
+              className="rounded-3xl border border-white/10 bg-zinc-950/75 p-6"
+            >
+              <h3 className="text-2xl font-bold neon-text">{stage.name}</h3>
+              <p className="mt-3 text-sm text-white/70">{stage.style}</p>
+              <p className="mt-5 text-sm font-medium text-purple-200">
+                Capacidade de {stage.capacity.toLocaleString('pt-BR')} pessoas
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-zinc-950 py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:px-8">
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold sm:text-4xl">
+                Local do festival
+              </h2>
+              <p className="mt-3 max-w-xl text-white/65">
+                Tudo que o público precisa saber para chegar, circular e
+                aproveitar o evento com segurança, conforto e acessibilidade.
+              </p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <article className="rounded-3xl border border-white/10 bg-black/40 p-6">
+                <h3 className="text-xl font-semibold neon-text">Endereço</h3>
+                <p className="mt-3 text-sm leading-7 text-white/70">
+                  Autódromo de Interlagos
+                  <br />
+                  Av. Senador Teotônio Vilela, 261
+                  <br />
+                  Interlagos — São Paulo/SP
+                </p>
+                <a
+                  href="https://www.google.com/maps?q=Autódromo+de+Interlagos"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex text-sm font-semibold text-purple-300 transition hover:text-purple-200"
+                >
+                  Abrir no Google Maps
+                </a>
+              </article>
+
+              <article className="rounded-3xl border border-white/10 bg-black/40 p-6">
+                <h3 className="text-xl font-semibold neon-text">
+                  Logística inteligente
+                </h3>
+                <ul className="mt-3 space-y-3 text-sm text-white/70">
+                  <li>• Estação Autódromo com rota dedicada.</li>
+                  <li>• Área oficial para apps de mobilidade.</li>
+                  <li>• Acessos sinalizados por palco e setor.</li>
+                  <li>• Time de suporte e posto médico 24h.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-4xl border border-purple-500/25 shadow-[0_0_40px_rgba(168,85,247,0.12)]">
+            <iframe
+              title="Mapa do Autódromo de Interlagos"
+              src="https://www.google.com/maps?q=Autódromo+de+Interlagos&output=embed"
+              className="min-h-80 w-full"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Tipos de ingresso com decisão mais clara
+            </h2>
+            <p className="mt-3 text-white/65">
+              Cards com conteúdo mais objetivo, largura fluida e CTA consistente
+              para reduzir atrito na jornada de compra.
+            </p>
+          </div>
+          <p className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
+            {liveSoldCount.toLocaleString('pt-BR')} ingressos vendidos até agora
+          </p>
         </div>
 
-        <div className="bg-black/40 rounded-2xl p-4 border border-zinc-800">
-           Sorteios VIP
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {ticketSummaries.map((ticket) => (
+            <article
+              key={ticket.id}
+              className="flex h-full flex-col rounded-4xl border border-white/10 bg-zinc-950/85 p-6 shadow-[0_0_40px_rgba(168,85,247,0.08)]"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-bold neon-text">
+                    {ticket.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-white/60">
+                    {ticket.description}
+                  </p>
+                </div>
+                {ticket.highlight && (
+                  <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
+                    {ticket.highlight}
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-8 space-y-2">
+                <p className="text-sm text-white/55">{ticket.currentBatch}</p>
+                <p className="text-3xl font-black">
+                  {ticket.price.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </p>
+                <p className="text-sm text-purple-200">
+                  {ticket.remaining.toLocaleString('pt-BR')} disponíveis
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  openProtectedRoute(
+                    `/ingressos?ticket=${ticket.id}`,
+                    'Faça login para comprar ingressos.',
+                  )
+                }
+                className="neon-button mt-8 rounded-full px-5 py-3 text-sm font-bold text-white"
+              >
+                Escolher ingresso
+              </button>
+            </article>
+          ))}
         </div>
+      </section>
 
-      </div>
+      <section className="bg-zinc-950 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-4xl border border-white/10 bg-black/45 p-6 shadow-[0_0_50px_rgba(168,85,247,0.08)] sm:p-8 lg:p-10">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-bold sm:text-4xl">
+                Receba novidades do festival
+              </h2>
+              <p className="mt-3 text-white/65">
+                Fluxo de newsletter com validação real, feedback acessível e
+                estado de sucesso claro para melhorar confiança do usuário.
+              </p>
+            </div>
 
+            {!newsletterSubscribed ? (
+              <form
+                className="mt-8 grid gap-4 lg:grid-cols-[1fr_auto]"
+                onSubmit={handleNewsletterSubmit}
+                noValidate
+              >
+                <div>
+                  <label
+                    htmlFor="newsletter-email"
+                    className="mb-2 block text-sm font-medium text-white/85"
+                  >
+                    Seu melhor e-mail
+                  </label>
+                  <input
+                    id="newsletter-email"
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(event) => setNewsletterEmail(event.target.value)}
+                    aria-invalid={Boolean(newsletterError)}
+                    aria-describedby={
+                      newsletterError ? 'newsletter-error' : undefined
+                    }
+                    placeholder="voce@empresa.com"
+                    className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white placeholder:text-white/35 focus:border-purple-400 focus:outline-none"
+                  />
+                  {newsletterError && (
+                    <p
+                      id="newsletter-error"
+                      className="mt-2 text-sm text-pink-400"
+                    >
+                      {newsletterError}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-purple-200 lg:self-end"
+                >
+                  Quero receber novidades
+                </button>
+              </form>
+            ) : (
+              <div className="mt-8 grid gap-4 lg:grid-cols-3">
+                <article className="rounded-3xl border border-purple-500/20 bg-purple-500/10 p-5">
+                  <p className="text-sm text-white/70">E-mail confirmado</p>
+                  <p className="mt-2 font-semibold text-purple-200">
+                    {newsletterEmail}
+                  </p>
+                </article>
+                <article className="rounded-3xl border border-white/10 bg-black/40 p-5 text-sm text-white/70">
+                  Pré-venda exclusiva e alertas de virada de lote.
+                </article>
+                <article className="rounded-3xl border border-white/10 bg-black/40 p-5 text-sm text-white/70">
+                  Line-up antecipado e experiências VIP especiais.
+                </article>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
-
-  )}
-</section>
-    </div>
-  );
+  )
 }
+
+export default Home

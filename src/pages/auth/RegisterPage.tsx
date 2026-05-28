@@ -1,113 +1,126 @@
-import { useEffect, useState } from "react";
-import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { AuthPageShell } from "../../components/auth/AuthPageShell";
-import { AuthField } from "../../components/auth/AuthField";
-import { usePasswordCriteria } from "../../hooks/usePasswordCriteria";
-import toast from "react-hot-toast";
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { AuthField } from '../../components/auth/AuthField'
+import { AuthPageShell } from '../../components/auth/AuthPageShell'
+import { useAuth } from '../../hooks/useAuth'
+import { usePasswordCriteria } from '../../hooks/usePasswordCriteria'
 
-const emailPattern = /\S+@\S+\.\S+/;
+const emailPattern = /\S+@\S+\.\S+/
 
 export default function RegisterPage() {
-  const { register, user } = useAuth();
-  const navigate = useNavigate();
+  const { register, user } = useAuth()
+  const navigate = useNavigate()
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [acceptTerms, setAcceptTerms] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState({ name: "", email: "", password: "", confirmPassword: "", acceptTerms: "" });
-  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [acceptTerms, setAcceptTerms] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    acceptTerms: '',
+  })
+  const [isLoading, setIsLoading] = useState(false)
 
-  const passwordCriteria = usePasswordCriteria(password);
+  const passwordCriteria = usePasswordCriteria(password)
 
   useEffect(() => {
-  if (user) {
-    navigate("/");
-  }
-}, [user, navigate]);
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
 
   function validate() {
-    const nextErrors = { name: "", email: "", password: "", confirmPassword: "", acceptTerms: "" };
-    let valid = true;
+    const nextErrors = {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      acceptTerms: '',
+    }
+    let valid = true
 
     if (!name.trim()) {
-      nextErrors.name = "Digite seu nome completo.";
-      valid = false;
+      nextErrors.name = 'Digite seu nome completo.'
+      valid = false
     }
 
     if (!email.trim()) {
-      nextErrors.email = "Informe um e-mail válido.";
-      valid = false;
+      nextErrors.email = 'Informe um e-mail válido.'
+      valid = false
     } else if (!emailPattern.test(email)) {
-      nextErrors.email = "Formato de e-mail inválido.";
-      valid = false;
+      nextErrors.email = 'Formato de e-mail inválido.'
+      valid = false
     }
 
     if (!password) {
-      nextErrors.password = "Crie uma senha segura.";
-      valid = false;
+      nextErrors.password = 'Crie uma senha segura.'
+      valid = false
     } else if (!passwordCriteria.valid) {
-      nextErrors.password = "A senha precisa ser forte e corresponder aos critérios abaixo.";
-      valid = false;
+      nextErrors.password =
+        'A senha precisa ser forte e corresponder aos critérios abaixo.'
+      valid = false
     }
 
     if (confirmPassword !== password) {
-      nextErrors.confirmPassword = "As senhas precisam ser iguais.";
-      valid = false;
+      nextErrors.confirmPassword = 'As senhas precisam ser iguais.'
+      valid = false
     }
 
     if (!acceptTerms) {
-      nextErrors.acceptTerms = "Você precisa aceitar os termos do festival.";
-      valid = false;
+      nextErrors.acceptTerms = 'Você precisa aceitar os termos do festival.'
+      valid = false
     }
 
-    setErrors(nextErrors);
-    return valid;
+    setErrors(nextErrors)
+    return valid
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-  event.preventDefault();
+    event.preventDefault()
 
-  if (!validate()) {
-    return;
-  }
+    if (!validate()) {
+      return
+    }
 
-  try {
-    setIsLoading(true);
+    try {
+      setIsLoading(true)
 
-    await new Promise((resolve) => setTimeout(resolve, 900));
+      await new Promise((resolve) => setTimeout(resolve, 900))
 
-    const result = register(name, email, password);
+      const result = register(name, email, password)
 
-    if (result.success) {
-        toast.success("Conta criada com sucesso!");
-      navigate("/");
-    } else {
-        toast.error(result.message);
+      if (result.success) {
+        toast.success('Conta criada com sucesso!')
+        navigate('/')
+      } else {
+        toast.error(result.message)
+
+        setErrors((prev) => ({
+          ...prev,
+          email: result.message,
+        }))
+      }
+    } catch (error) {
+      console.error(error)
+
+      toast.error('Erro ao criar conta.')
 
       setErrors((prev) => ({
         ...prev,
-        email: result.message,
-      }));
+        email: 'Erro ao criar conta.',
+      }))
+    } finally {
+      setIsLoading(false)
     }
-  } catch (error) {
-    console.error(error);
-
-    toast.error("Erro ao criar conta.")
-
-    setErrors((prev) => ({
-      ...prev,
-      email: "Erro ao criar conta.",
-    }));
-  } finally {
-    setIsLoading(false);
   }
-}
 
   return (
     <AuthPageShell
@@ -144,7 +157,7 @@ export default function RegisterPage() {
         <AuthField
           icon={Lock}
           label="Senha"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           name="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -155,6 +168,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPassword((state) => !state)}
+              aria-label={showPassword ? 'Ocultar senha' : 'Exibir senha'}
               className="text-white/60 transition hover:text-white"
             >
               {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
@@ -165,16 +179,32 @@ export default function RegisterPage() {
         <div className="grid gap-2 rounded-3xl border border-white/10 bg-black/40 p-4 text-sm text-white/70">
           <p className="font-semibold text-white">Sua senha deve conter</p>
           <ul className="space-y-2">
-            <li className={passwordCriteria.length ? "text-cyan-300" : "text-white/40"}>
+            <li
+              className={
+                passwordCriteria.length ? 'text-cyan-300' : 'text-white/40'
+              }
+            >
               • 8 ou mais caracteres
             </li>
-            <li className={passwordCriteria.uppercase ? "text-cyan-300" : "text-white/40"}>
+            <li
+              className={
+                passwordCriteria.uppercase ? 'text-cyan-300' : 'text-white/40'
+              }
+            >
               • Uma letra maiúscula
             </li>
-            <li className={passwordCriteria.number ? "text-cyan-300" : "text-white/40"}>
+            <li
+              className={
+                passwordCriteria.number ? 'text-cyan-300' : 'text-white/40'
+              }
+            >
               • Um número
             </li>
-            <li className={passwordCriteria.symbol ? "text-cyan-300" : "text-white/40"}>
+            <li
+              className={
+                passwordCriteria.symbol ? 'text-cyan-300' : 'text-white/40'
+              }
+            >
               • Um símbolo especial
             </li>
           </ul>
@@ -183,7 +213,7 @@ export default function RegisterPage() {
         <AuthField
           icon={Lock}
           label="Confirmar senha"
-          type={showConfirmPassword ? "text" : "password"}
+          type={showConfirmPassword ? 'text' : 'password'}
           name="confirmPassword"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
@@ -194,6 +224,11 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((state) => !state)}
+              aria-label={
+                showConfirmPassword
+                  ? 'Ocultar confirmação de senha'
+                  : 'Exibir confirmação de senha'
+              }
               className="text-white/60 transition hover:text-white"
             >
               {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
@@ -209,19 +244,24 @@ export default function RegisterPage() {
               onChange={(event) => setAcceptTerms(event.target.checked)}
               className="h-4 w-4 rounded border-white/20 bg-black text-purple-500 accent-purple-400"
             />
-            Aceito os <span className="text-purple-300">termos do festival</span> e a experiência Neon Sound.
+            Aceito os{' '}
+            <span className="text-purple-300">termos do festival</span> e a
+            experiência Neon Sound.
           </label>
-          {errors.acceptTerms && <p className="text-sm text-pink-400">{errors.acceptTerms}</p>}
+          {errors.acceptTerms && (
+            <p className="text-sm text-pink-400">{errors.acceptTerms}</p>
+          )}
         </div>
 
         <button
           type="submit"
           disabled={isLoading}
+          aria-busy={isLoading}
           className="flex w-full items-center justify-center gap-3 rounded-full bg-[linear-gradient(90deg,rgba(192,38,211,1),rgba(168,85,247,1),rgba(6,182,212,1))] px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isLoading ? "Criando conta..." : "Criar conta Neon"}
+          {isLoading ? 'Criando conta...' : 'Criar conta Neon'}
         </button>
       </form>
     </AuthPageShell>
-  );
+  )
 }
