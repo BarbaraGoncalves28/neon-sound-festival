@@ -31,6 +31,8 @@ const initialCountdown: CountdownState = {
   seconds: 0,
 }
 
+const highlightedFestivalDays = `${festivalDays[0]}, ${festivalDays[1]} e ${festivalDays[2]} de junho`
+
 function getCountdown(): CountdownState {
   const now = Date.now()
   const distance = eventDate.getTime() - now
@@ -179,6 +181,28 @@ export function Home() {
               discovery, compra de ingressos e gestão do evento com fluidez de
               produto real.
             </p>
+
+            <div className="mt-8 inline-flex max-w-fit flex-wrap items-center gap-4 rounded-3xl border border-purple-400/30 bg-black/45 px-5 py-4 shadow-[0_0_30px_rgba(168,85,247,0.16)] backdrop-blur-md">
+              <div className="flex gap-2">
+                {festivalDays.map((day) => (
+                  <div
+                    key={day}
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-purple-400/30 bg-purple-500/15 text-sm font-black tracking-[0.12em] text-purple-200"
+                  >
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-purple-300">
+                  Dias oficiais do festival
+                </p>
+                <p className="mt-1 text-lg font-bold text-white sm:text-xl">
+                  {highlightedFestivalDays}
+                </p>
+              </div>
+            </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
