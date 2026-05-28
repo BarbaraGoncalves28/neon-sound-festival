@@ -198,7 +198,9 @@ export default function ScheduleManager() {
       return false
     }
 
-    const updatedArtists = store.artists.filter((artist) => artist.id !== artistId)
+    const updatedArtists = store.artists.filter(
+      (artist) => artist.id !== artistId,
+    )
 
     setStoreArtists(updatedArtists)
     saveStoredArtists(updatedArtists)
@@ -390,7 +392,8 @@ export default function ScheduleManager() {
             </h2>
 
             <p className="text-gray-400 mt-3">
-              Cadastre artistas, vincule horários e organize os palcos do festival.
+              Cadastre artistas, vincule horários e organize os palcos do
+              festival.
             </p>
           </div>
         </div>
@@ -398,9 +401,7 @@ export default function ScheduleManager() {
         {/* FILTERS */}
         <div className="bg-zinc-900/50 border border-purple-500/30 rounded-3xl p-8 mb-14">
           <div className="mb-8">
-            <h3 className="text-2xl font-bold neon-text">
-              Buscar artistas
-            </h3>
+            <h3 className="text-2xl font-bold neon-text">Buscar artistas</h3>
 
             <p className="text-gray-400 mt-2">
               Filtre os cadastros por artista, palco, dia ou horário.
@@ -483,12 +484,11 @@ export default function ScheduleManager() {
         {/* CREATE */}
         <div className="bg-zinc-900/50 border border-purple-500/30 rounded-3xl p-8 mb-14">
           <div className="mb-10">
-            <h3 className="text-2xl font-bold neon-text">
-              Gerenciar Artistas
-            </h3>
+            <h3 className="text-2xl font-bold neon-text">Gerenciar Artistas</h3>
 
             <p className="text-gray-400 mt-2">
-              Use a base inicial da home como referência e adicione novos artistas por aqui.
+              Use a base inicial da home como referência e adicione novos
+              artistas por aqui.
             </p>
           </div>
 
@@ -656,7 +656,8 @@ export default function ScheduleManager() {
             </p>
           </div>
 
-          {paginatedPerformances.length === 0 && filteredOrphanArtists.length === 0 ? (
+          {paginatedPerformances.length === 0 &&
+          filteredOrphanArtists.length === 0 ? (
             <div className="text-center py-24 border border-zinc-800 rounded-3xl">
               <p className="text-2xl neon-text mb-3">
                 Nenhum artista encontrado
@@ -667,7 +668,9 @@ export default function ScheduleManager() {
               {paginatedPerformances.length > 0 && (
                 <div className="grid md:grid-cols-2 gap-8">
                   {paginatedPerformances.map((p) => {
-                    const artist = store.artists.find((a) => a.id === p.artistId)
+                    const artist = store.artists.find(
+                      (a) => a.id === p.artistId,
+                    )
 
                     const stage = store.stages.find((s) => s.id === p.stageId)
 
@@ -789,7 +792,8 @@ export default function ScheduleManager() {
                       Artistas salvos sem apresentação vinculada
                     </h4>
                     <p className="mt-2 text-sm text-gray-300">
-                      Estes cadastros foram recuperados do armazenamento local, mas ainda não têm uma apresentação completa salva.
+                      Estes cadastros foram recuperados do armazenamento local,
+                      mas ainda não têm uma apresentação completa salva.
                     </p>
                   </div>
 
@@ -807,11 +811,15 @@ export default function ScheduleManager() {
                           <p className="text-gray-400">Palco não vinculado</p>
 
                           <p className="text-purple-300">
-                            {artist.day ? `Dia ${artist.day}` : 'Dia não informado'}
+                            {artist.day
+                              ? `Dia ${artist.day}`
+                              : 'Dia não informado'}
                           </p>
 
                           <p className="text-gray-400">
-                            {artist.time ? `${artist.time} - horário inicial salvo` : 'Horário não informado'}
+                            {artist.time
+                              ? `${artist.time} - horário inicial salvo`
+                              : 'Horário não informado'}
                           </p>
                         </div>
 

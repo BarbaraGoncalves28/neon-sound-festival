@@ -3,7 +3,8 @@ import type { Artist, Performance, Stage } from './adminStore'
 
 export const ADMIN_ARTISTS_STORAGE_KEY = 'neonSoundFestival.admin.artists'
 export const ADMIN_STAGES_STORAGE_KEY = 'neonSoundFestival.admin.stages'
-export const ADMIN_PERFORMANCES_STORAGE_KEY = 'neonSoundFestival.admin.performances'
+export const ADMIN_PERFORMANCES_STORAGE_KEY =
+  'neonSoundFestival.admin.performances'
 export const ADMIN_DATA_UPDATED_EVENT = 'neon-sound-festival:admin-data-updated'
 
 const defaultArtists: Artist[] = festivalArtists.map((artist) => ({
@@ -68,10 +69,15 @@ function cloneItems<T extends Record<string, unknown>>(items: T[]) {
 }
 
 function canUseStorage() {
-  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+  return (
+    typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+  )
 }
 
-function readStorageArray<T extends Record<string, unknown>>(key: string, fallback: T[]) {
+function readStorageArray<T extends Record<string, unknown>>(
+  key: string,
+  fallback: T[],
+) {
   if (!canUseStorage()) {
     return cloneItems(fallback)
   }
@@ -95,7 +101,9 @@ function readStorageArray<T extends Record<string, unknown>>(key: string, fallba
   }
 }
 
-function notifyAdminDataUpdated(resource: 'artists' | 'stages' | 'performances') {
+function notifyAdminDataUpdated(
+  resource: 'artists' | 'stages' | 'performances',
+) {
   if (!canUseStorage()) {
     return
   }

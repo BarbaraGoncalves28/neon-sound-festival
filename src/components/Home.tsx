@@ -85,7 +85,9 @@ export function Home() {
   useEffect(() => {
     const syncAdditionalArtists = () => {
       const defaultNames = new Set(
-        defaultFestivalArtists.map((artist) => artist.name.trim().toLowerCase()),
+        defaultFestivalArtists.map((artist) =>
+          artist.name.trim().toLowerCase(),
+        ),
       )
 
       setAdditionalArtists(
@@ -100,7 +102,10 @@ export function Home() {
 
     return () => {
       window.removeEventListener('storage', syncAdditionalArtists)
-      window.removeEventListener(ADMIN_DATA_UPDATED_EVENT, syncAdditionalArtists)
+      window.removeEventListener(
+        ADMIN_DATA_UPDATED_EVENT,
+        syncAdditionalArtists,
+      )
     }
   }, [])
 
