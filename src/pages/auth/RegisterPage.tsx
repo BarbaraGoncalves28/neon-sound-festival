@@ -259,7 +259,7 @@ export default function RegisterPage() {
           aria-busy={isLoading}
           className="flex w-full items-center justify-center gap-3 rounded-full bg-[linear-gradient(90deg,rgba(192,38,211,1),rgba(168,85,247,1),rgba(6,182,212,1))] px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isLoading ? 'Criando conta...' : 'Criar conta Neon'}
+          {isLoading ? 'Criando conta...' : 'Criar conta'}
         </button>
       </form>
     </AuthPageShell>

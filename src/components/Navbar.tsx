@@ -169,7 +169,7 @@ export function Navbar() {
                 aria-haspopup="menu"
                 aria-expanded={isUserMenuOpen}
                 onClick={() => setIsUserMenuOpen((state) => !state)}
-                className="flex items-center gap-3 rounded-full border border-purple-500/50 bg-white/5 px-4 py-2 text-white shadow-[0_0_6px_rgba(168,85,247,0.35)] transition hover:border-purple-400 hover:bg-white/10"
+                className="flex items-center gap-3 rounded-full border border-purple-500/50 bg-white/5 px-4 py-2 text-white shadow-[0_0_6px_rgba(168,85,247,0.35)] transition hover:border-purple-400 hover:bg-white/10 cursor-pointer"
               >
                 <span className="max-w-32 truncate text-sm text-purple-200 capitalize">
                   {user.name}
@@ -200,7 +200,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-red-300 transition hover:bg-red-500/15 hover:text-white"
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-red-300 transition hover:bg-red-500/15 hover:text-white cursor-pointer"
                   >
                     <LogOut size={18} />
                     Sair
@@ -211,7 +211,7 @@ export function Navbar() {
           ) : (
             <Link
               to="/login"
-              className="ml-2 rounded-full border border-purple-500/60 px-5 py-2 text-sm font-semibold text-white transition hover:bg-purple-600"
+              className="ml-2 rounded-full border border-purple-500/60 px-5 py-2 text-sm font-semibold text-white transition hover:bg-purple-600 cursor-pointer"
               onClick={closeMenus}
             >
               Entrar
@@ -221,7 +221,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => handleProtectedPurchase()}
-            className="neon-button ml-2 rounded-full border border-purple-500 px-4 py-2 text-sm font-bold text-white transition-all duration-300 hover:bg-purple-600"
+            className="neon-button ml-2 rounded-full border border-purple-500 px-4 py-2 text-sm font-bold text-white transition-all duration-300 hover:bg-purple-600 cursor-pointer"
           >
             Comprar ingresso
           </button>

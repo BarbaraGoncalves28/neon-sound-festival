@@ -146,7 +146,7 @@ export default function LoginPage() {
           aria-busy={isLoading}
           className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isLoading ? 'Entrando...' : 'Entrar no Festival'}
+          {isLoading ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
     </AuthPageShell>

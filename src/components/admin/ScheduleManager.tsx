@@ -500,7 +500,7 @@ export default function ScheduleManager() {
               </label>
 
               <input
-                placeholder="Buscar artista existente ou cadastrar um novo"
+                placeholder="Cadastrar um novo artista"
                 value={artistName}
                 onChange={(e) => setArtistName(e.target.value)}
                 className="w-full bg-black/60 border border-purple-500/30 rounded-xl px-4 py-3 outline-none focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500"
@@ -791,10 +791,6 @@ export default function ScheduleManager() {
                     <h4 className="text-lg font-semibold text-yellow-300">
                       Artistas salvos sem apresentação vinculada
                     </h4>
-                    <p className="mt-2 text-sm text-gray-300">
-                      Estes cadastros foram recuperados do armazenamento local,
-                      mas ainda não têm uma apresentação completa salva.
-                    </p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-8">

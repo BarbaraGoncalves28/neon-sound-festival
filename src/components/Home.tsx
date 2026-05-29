@@ -119,7 +119,7 @@ export function Home() {
       },
       { label: 'Palcos ativos', value: `${stages.length}` },
       { label: 'Dias de festival', value: `${festivalDays.length}` },
-      { label: 'Capacidade total', value: '+220k' },
+      { label: 'Capacidade total', value: '280k' },
     ],
     [additionalArtists],
   )
@@ -173,13 +173,11 @@ export function Home() {
             <span className="inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-1 text-xs uppercase tracking-[0.3em] text-purple-200">
               Festival multi-palco • São Paulo
             </span>
-            <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl lg:text-7xl">
-              Neon Sound Festival 2027 com experiência premium em qualquer tela
+            <h1 className="mt-6 text-2xl font-black leading-tight sm:text-3xl lg:text-5xl">
+              Neon Sound Festival 2027: música, luzes e energia em uma experiência inesquecível
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
-              Três dias de festival, quatro palcos e uma jornada pensada para
-              discovery, compra de ingressos e gestão do evento com fluidez de
-              produto real.
+              Três dias de shows, DJs, efeitos visuais e quatro palcos com atrações eletrizantes para viver o maior festival neon do ano.
             </p>
 
             <div className="mt-8 inline-flex max-w-fit flex-wrap items-center gap-4 rounded-3xl border border-purple-400/30 bg-black/45 px-5 py-4 shadow-[0_0_30px_rgba(168,85,247,0.16)] backdrop-blur-md">
@@ -213,13 +211,13 @@ export function Home() {
                     'Faça login para garantir seu ingresso.',
                   )
                 }
-                className="neon-button rounded-full px-6 py-3 text-sm font-bold text-white sm:px-8"
+                className="neon-button rounded-full px-6 py-3 text-sm font-bold text-white sm:px-8 cursor-pointer"
               >
                 Comprar ingresso
               </button>
               <Link
                 to="/lineup"
-                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:px-8"
+                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:px-8 cursor-pointer"
               >
                 Explorar line-up
               </Link>
@@ -261,11 +259,10 @@ export function Home() {
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Headliners que movem o line-up
+            Headliners 
           </h2>
           <p className="mt-3 text-white/65">
-            Curadoria visual e editorial consistente, com cards fluidos e
-            hierarquia clara para navegar bem em mobile, desktop e telas largas.
+            Os artistas que vão incendiar os palcos.
           </p>
         </div>
 
@@ -305,11 +302,10 @@ export function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 max-w-2xl">
             <h2 className="text-3xl font-bold sm:text-4xl">
-              Abertura oficial com direção de experiência
+              Opening Acts
             </h2>
             <p className="mt-3 text-white/65">
-              O bloco de abertura agora escala melhor em telas menores e mantém
-              impacto visual sem quebrar texto, imagem ou espaçamento.
+              Os artistas que dão início à energia do festival.
             </p>
           </div>
 
@@ -396,11 +392,10 @@ export function Home() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Experiência multi-palco sem ruído visual
+            Experiência multi-palco
           </h2>
           <p className="mt-3 text-white/65">
-            Informação objetiva para orientar o público rapidamente: capacidade,
-            proposta artística e organização espacial clara.
+            Explore diferentes atmosferas e escolha sua vibe.
           </p>
         </div>
 
@@ -462,6 +457,10 @@ export function Home() {
                   <li>• Área oficial para apps de mobilidade.</li>
                   <li>• Acessos sinalizados por palco e setor.</li>
                   <li>• Time de suporte e posto médico 24h.</li>
+                  <li>• Praça de alimentação com opções variadas durante todo o evento.</li>
+                  <li>• Mapa interativo para facilitar a circulação entre os palcos.</li>
+                  <li>• Entrada com check-in digital rápido e seguro.</li>
+                  <li>• Equipe de segurança monitorando todos os setores.</li>
                 </ul>
               </article>
             </div>
@@ -483,11 +482,10 @@ export function Home() {
         <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold sm:text-4xl">
-              Tipos de ingresso com decisão mais clara
+              Tipos de ingressos
             </h2>
             <p className="mt-3 text-white/65">
-              Cards com conteúdo mais objetivo, largura fluida e CTA consistente
-              para reduzir atrito na jornada de compra.
+              Garanta seu lugar, com a experiência que mais combina com você.
             </p>
           </div>
           <p className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
@@ -538,7 +536,7 @@ export function Home() {
                     'Faça login para comprar ingressos.',
                   )
                 }
-                className="neon-button mt-8 rounded-full px-5 py-3 text-sm font-bold text-white"
+                className="neon-button mt-8 rounded-full px-5 py-3 text-sm font-bold text-white cursor-pointer"
               >
                 Escolher ingresso
               </button>
@@ -555,8 +553,7 @@ export function Home() {
                 Receba novidades do festival
               </h2>
               <p className="mt-3 text-white/65">
-                Fluxo de newsletter com validação real, feedback acessível e
-                estado de sucesso claro para melhorar confiança do usuário.
+                Cadastre-se para acompanhar lançamentos, artistas confirmados e tudo que vai acontecer no festival.
               </p>
             </div>
 
@@ -597,7 +594,7 @@ export function Home() {
 
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-purple-200 lg:self-end"
+                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-purple-200 lg:self-end cursor-pointer"
                 >
                   Quero receber novidades
                 </button>

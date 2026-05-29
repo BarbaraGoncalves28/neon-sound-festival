@@ -231,8 +231,7 @@ export function TicketsPage() {
             Garanta seu lugar no Neon Sound Festival
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/65 sm:text-base">
-            Fluxo de compra em etapas com feedback claro, formulários acessíveis
-            e prioridade para uso confortável em mobile.
+            Escolha seu ingresso, confirme sua presença e entre no ritmo.
           </p>
         </header>
 
@@ -326,9 +325,6 @@ export function TicketsPage() {
             <h2 className="text-2xl font-bold sm:text-3xl">
               Escolha o dia do festival
             </h2>
-            <p className="mt-2 text-white/65">
-              Selecione a data que melhor encaixa na sua jornada.
-            </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {festivalDays.map((day) => (
@@ -336,7 +332,7 @@ export function TicketsPage() {
                   key={day}
                   type="button"
                   onClick={() => setSelectedDay(day)}
-                  className={`rounded-2xl border px-5 py-5 text-left transition ${
+                  className={`cursor-pointer rounded-2xl border px-5 py-5 text-left transition ${
                     selectedDay === day
                       ? 'border-purple-400 bg-purple-500/15 text-white'
                       : 'border-white/10 bg-white/5 text-white/70 hover:border-purple-400/40 hover:bg-white/10'
@@ -355,7 +351,7 @@ export function TicketsPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10"
+                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10 cursor-pointer"
               >
                 Voltar
               </button>
@@ -363,7 +359,7 @@ export function TicketsPage() {
                 type="button"
                 disabled={!selectedDay}
                 onClick={() => setStep(3)}
-                className="neon-button rounded-full px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="neon-button rounded-full px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
               >
                 Continuar para revisão
               </button>
@@ -399,14 +395,14 @@ export function TicketsPage() {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10"
+                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10 cursor-pointer"
               >
                 Alterar dia
               </button>
               <button
                 type="button"
                 onClick={() => setStep(4)}
-                className="neon-button rounded-full px-5 py-3 text-sm font-bold text-white"
+                className="neon-button rounded-full px-5 py-3 text-sm font-bold text-white cursor-pointer"
               >
                 Continuar para pagamento
               </button>
@@ -419,10 +415,6 @@ export function TicketsPage() {
             <h2 className="text-2xl font-bold sm:text-3xl">
               Dados do comprador
             </h2>
-            <p className="mt-2 text-white/65">
-              Formulário revisado com labels, validação clara e layout
-              consistente em qualquer breakpoint.
-            </p>
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               <div>
@@ -499,7 +491,7 @@ export function TicketsPage() {
                   onChange={(event) =>
                     setBuyerPhone(formatPhone(event.target.value))
                   }
-                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white focus:border-purple-400 focus:outline-none"
+                  className=" w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white focus:border-purple-400 focus:outline-none"
                 />
                 {errors.phone && (
                   <p className="mt-2 text-sm text-pink-400">{errors.phone}</p>
@@ -521,7 +513,7 @@ export function TicketsPage() {
                     key={option.id}
                     type="button"
                     onClick={() => setPaymentMethod(option.id as PaymentMethod)}
-                    className={`rounded-2xl border px-4 py-4 text-left transition ${
+                    className={` rounded-2xl border px-4 py-4 text-left transition cursor-pointer ${
                       paymentMethod === option.id
                         ? 'border-purple-400 bg-purple-500/15 text-white'
                         : 'border-white/10 bg-white/5 text-white/70 hover:border-purple-400/30 hover:bg-white/10'
@@ -541,7 +533,7 @@ export function TicketsPage() {
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10"
+                className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10 cursor-pointer"
               >
                 Voltar para revisão
               </button>
@@ -553,7 +545,7 @@ export function TicketsPage() {
                   if (!validateForm()) return
                   handlePayment()
                 }}
-                className="neon-button inline-flex items-center justify-center gap-3 rounded-full px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="cursor-pointer neon-button inline-flex items-center justify-center gap-3 rounded-full px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loadingPayment ? (
                   <>
@@ -601,7 +593,7 @@ export function TicketsPage() {
                 <button
                   type="button"
                   onClick={downloadTicket}
-                  className="neon-button rounded-full px-5 py-3 text-sm font-bold text-white"
+                  className=" neon-button rounded-full px-5 py-3 text-sm font-bold text-white cursor-pointer"
                 >
                   Baixar PDF
                 </button>
@@ -618,7 +610,7 @@ export function TicketsPage() {
                     setQrCode(null)
                     setStep(1)
                   }}
-                  className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10"
+                  className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10 cursor-pointer"
                 >
                   Comprar outro ingresso
                 </button>

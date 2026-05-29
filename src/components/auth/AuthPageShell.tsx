@@ -96,10 +96,10 @@ export function AuthPageShell({
                   Acesso seguro
                 </p>
                 <h2 className="text-2xl font-semibold text-white">
-                  Design de autenticação premium
+                  Sua experiência neon começa aqui
                 </h2>
                 <p className="text-sm leading-6 text-white/70">
-                  Conecte-se ao universo Neon Sound com segurança e fluidez.
+                  Faça login ou cadastre-se para garantir acesso.
                 </p>
               </div>
 
