@@ -169,7 +169,7 @@ export default function RegisterPage() {
               type="button"
               onClick={() => setShowPassword((state) => !state)}
               aria-label={showPassword ? 'Ocultar senha' : 'Exibir senha'}
-              className="text-white/60 transition hover:text-white"
+              className="cursor-pointer text-white/60 transition hover:text-white"
             >
               {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
@@ -229,7 +229,7 @@ export default function RegisterPage() {
                   ? 'Ocultar confirmação de senha'
                   : 'Exibir confirmação de senha'
               }
-              className="text-white/60 transition hover:text-white"
+              className="cursor-pointer text-white/60 transition hover:text-white"
             >
               {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
@@ -257,11 +257,11 @@ export default function RegisterPage() {
           type="submit"
           disabled={isLoading}
           aria-busy={isLoading}
-          className="flex w-full items-center justify-center gap-3 rounded-full bg-[linear-gradient(90deg,rgba(192,38,211,1),rgba(168,85,247,1),rgba(6,182,212,1))] px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          className="cursor-pointer flex w-full items-center justify-center gap-3 rounded-full bg-[linear-gradient(90deg,rgba(192,38,211,1),rgba(168,85,247,1),rgba(6,182,212,1))] px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isLoading ? 'Criando conta...' : 'Criar conta'}
         </button>
       </form>
     </AuthPageShell>
-  )
+  ) 
 }

@@ -133,7 +133,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => setShowPassword((current) => !current)}
               aria-label={showPassword ? 'Ocultar senha' : 'Exibir senha'}
-              className="text-white/60 transition hover:text-white"
+              className="cursor-pointer text-white/60 transition hover:text-white"
             >
               {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
@@ -144,7 +144,7 @@ export default function LoginPage() {
           type="submit"
           disabled={isLoading}
           aria-busy={isLoading}
-          className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          className="cursor-pointer flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-base font-semibold text-black transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isLoading ? 'Entrando...' : 'Entrar'}
         </button>
