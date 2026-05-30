@@ -120,7 +120,7 @@ export function Navbar() {
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
-          ? 'border-b border-white/10 bg-black/85 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl'
+          ? 'bg-black/85 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl'
           : 'bg-black/25 backdrop-blur-md'
       }`}
     >

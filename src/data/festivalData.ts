@@ -113,6 +113,7 @@ export const artists: FestivalArtist[] = [
     genre: 'Pop/Electronic',
     day: 30,
     image: singerPopTwo,
+    headliner: true,
   },
   {
     id: '5',
@@ -122,7 +123,14 @@ export const artists: FestivalArtist[] = [
     image: singerRapTwo,
     headliner: true,
   },
-  { id: '6', name: 'Atlas Riff', genre: 'Rock', day: 29, image: singerRockTwo },
+  {
+    id: '6',
+    name: 'Atlas Riff',
+    genre: 'Rock',
+    day: 29,
+    image: singerRockTwo,
+    headliner: true,
+  },
   {
     id: '7',
     name: 'Kai Solaris',
@@ -153,6 +161,7 @@ export const artists: FestivalArtist[] = [
     genre: 'Pop/Electronic',
     day: 30,
     image: singerPopFour,
+    headliner: true,
   },
   {
     id: '11',
@@ -160,6 +169,7 @@ export const artists: FestivalArtist[] = [
     genre: 'Rap/Hip-Hop',
     day: 30,
     image: singerRapFour,
+    headliner: true,
   },
   {
     id: '12',
@@ -177,7 +187,14 @@ export const artists: FestivalArtist[] = [
     image: singerPopFive,
     headliner: true,
   },
-  { id: '14', name: 'Krown Zero', genre: 'Rap', day: 30, image: singerRapFive },
+  {
+    id: '14',
+    name: 'Krown Zero',
+    genre: 'Rap',
+    day: 30,
+    image: singerRapFive,
+    headliner: true,
+  },
   {
     id: '15',
     name: 'Silver Howl',
