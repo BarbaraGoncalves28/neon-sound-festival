@@ -53,12 +53,8 @@ export function LineupPage() {
             Programação oficial
           </p>
           <h1 className="mt-4 text-4xl font-black sm:text-5xl">
-            Line-up pronto para explorar sem apertos
+            Line-up 
           </h1>
-          <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
-            Filtros claros, visualizações complementares e timeline com leitura
-            melhorada para mobile, desktop e telas mais largas.
-          </p>
         </header>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -96,10 +92,10 @@ export function LineupPage() {
                 key={day}
                 type="button"
                 onClick={() => setDayFilter(day as number | 'all')}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition ${
                   dayFilter === day
                     ? 'border-purple-400 bg-purple-500/15 text-white'
-                    : 'border-white/10 bg-white/5 text-white/65 hover:border-purple-400/40 hover:bg-white/10'
+                    : 'border-white/10 bg-white/5 text-white/65 hover:border-purple-400/40 hover:bg-white/10 cursor-pointer'
                 }`}
               >
                 {day === 'all' ? 'Todos os dias' : `Dia ${day}`}
@@ -111,7 +107,7 @@ export function LineupPage() {
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm font-semibold transition ${
                 viewMode === 'grid'
                   ? 'bg-purple-500 text-white'
                   : 'text-white/65 hover:text-white'
@@ -127,7 +123,7 @@ export function LineupPage() {
                   setDayFilter(festivalDays[0])
                 }
               }}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm font-semibold transition ${
                 viewMode === 'timeline'
                   ? 'bg-purple-500 text-white'
                   : 'text-white/65 hover:text-white'
